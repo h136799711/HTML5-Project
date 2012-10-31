@@ -9,52 +9,42 @@
 ------------------------------
 * 类别: 魔法格斗 (假定)
 * 支持: 1人对战AI。对战成绩记录(PHP 技术实现--简单存储)。 (假定)
-* 开发语言:HTML5 + JAVASCRIPT + CSS.
----------------------------------------------------------
-## 游戏架构-JS OOP (假定)
+* 开发语言:HTML5 + Javascript + CSS.
+
+## 游戏架构  (假定)
 
 * Controller : 期望是JS类
-** AssetController : 资源管理类，存储一些需要经常使用的图片，JSON数据。
-** SceneController : 场景模型
-** RoleController:角色模型 
-** SkillController:技能模型
+* AssetController : 资源管理类，存储一些需要经常使用的图片，JSON数据。
+* SceneController : 场景模型
+* RoleController:角色模型 
+* SkillController:技能模型
 * Model : 期望是JS类
-** SceneModel : 场景模型
-** RoleModel:角色模型 
-** SkillModel:技能模型
+* SceneModel : 场景模型
+* RoleModel:角色模型 
+* SkillModel:技能模型
 * View : 期望是HTML5页面
-** SceneView : 场景模型
-** RoleView : 角色模型 
-** SkillView : 技能视图
+* SceneView : 场景模型
+* RoleView : 角色模型 
+* SkillView : 技能视图
 整个游戏大体为以上3部分
+
 ==================
-###项目结构,都表示文件夹除了带扩展名的。
+
+##项目结构,都表示文件夹除了带扩展名的。
+===================================
 
 * 1. framework
-** 1.1 Views : 其中无类，期望是HTML文件，其中引用相应地Controllers，Models
-** 1.2 Models : 其中的类将以Mdl结尾
-** 1.3 Controllers : 其中的类将以Ctrl结尾
-** 1.4 utils : 常用工具脚本
-** 1.5 library : 使用的第三方库
+* 1.1 Views : 其中无类，期望是HTML文件，其中引用相应地Controllers，Models
+* 1.2 Models : 其中的类将以Mdl结尾
+* 1.3 Controllers : 其中的类将以Ctrl结尾
+* 1.4 utils : 常用工具脚本
+* 1.5 library : 使用的第三方库
 * 2 assets:资源 包含图片，其他文本，XML数据
 * 3 index.html ： 程序访问入口
 * 4 readme.md : 程序说明文件
 
-
-=======
-* framework
-** Views : 其中无类，期望是HTML文件，其中引用相应地Controllers，Models
-** Models : 其中的类将以Mdl结尾
-** Controllers : 其中的类将以Ctrl结尾
-** utils : 常用工具脚本
-** library : 使用的第三方库
-* assets:资源 包含图片，其他文本，XML数据
-* index.html ： 程序访问入口
-* readme.md : 程序说明文件
-
-
-
 ================================
+
 ##程序开发路线：
 * 1.开发框架，能访问index.html显示游戏的描述。(周期:2天)
 * 2.能加载并显示背景，能加载并显示一个角色。(周期:2天)
@@ -64,10 +54,11 @@
 * 6.AI编写。(周期:7-10天)
 * 7.其他检测。(周期:4天)
 * 其中3,4，6步骤重要，
-* 初步预计可能要34天到51天来开发。
+ 初步预计可能要34天到51天来开发。
+
 ================================================
 
 ###将用以上的计划进行开发，最后对JS脚本进行整合，
 ###2012-10-31 
-=======
+==============================================
 
