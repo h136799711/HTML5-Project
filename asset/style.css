@@ -3,7 +3,66 @@ body{
 	font-family: "宋体";
 	font-size: 13px;
 	color:#000000;
+	text-align:center;
+	margin:0 auto;
+	background-color:#Ddfffa;
+	padding:0;
+	border:0;
 }
 canvas{
 	border:1px solid;
+    width:640px;
+	height:480px;
+	margin:5px auto;
+	margin-bottom:0px;
+	border-color:#cceee9;
+}
+.canvas-start-over{
+	background-color:#99ccdd;
+}
+article {
+	width:640px;
+	border:1px solid;
+	margin:0 auto;
+	border-color:#cceee9;
+}
+ input{
+  border:0;
+  background-color:#ffffff;
+  padding:0px;
+  color:#000000;
+  cursor:pointer;
+}
+div #information span {
+	color:#88cd44;
+	font-size:2em;
+}
+ #start input{
+  width:50px;
+  height:50px;
+  position:absolute;
+}
+
+div #content{
+	border-color:#cceee9;
+    width:800px;
+}
+#instruction ul{
+	list-style:none;
+	color:#d71133;
+}
+
+.onstart{
+background:url('start.png');
+width:64px;
+height:64px;
+z-index:999;
+text-indent:-9999px;
+}
+.onstart-over{
+background:url('start-over.png');
+width:64px;
+height:64px;
+z-index:999;
+text-indent:-9999px;
 }

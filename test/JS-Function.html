@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JS-Function Test</title>
+<meta charset="utf-8">
+<meta name="author" content="hebidu">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="generator" content="EditPlus">
+<meta name="revised" content="hebidu @2012-10-31">
+<script type="text/javascript">
+	function test(){
+		var cat = {			
+			id : "id name",//var声明的是函数内部的作用域
+			id2 : "name",//可被外部访问
+
+			init : function(){
+				return this;
+			},
+			getId : function(){
+				return this.id;//id name 
+				//return this.id;//undefined 不可访问
+			},
+			internal : {
+				setID:function(){
+				//id name 是上一层中的值
+//					return this.id;//undefined this的缘故
+				}
+			}
+
+		};
+		cat.getId2 = function(){
+			return this.id2;
+		};
+		
+		//console.log(cat);
+
+	
+		var blackCat = {
+		};
+		blackCat = Object.create(cat);
+		//(function(){
+			//blackCat.prototype = new cat.initialize();
+	//	});
+		
+		//blackCat.prototype.id="blacCat id name";
+		blackCat.id="blacCat id name";
+		
+		//blackCat.id2 = "123";
+		console.log(blackCat);
+		console.log(blackCat.getId());
+		console.log(cat.getId());
+		
+		console.log(blackCat.getId2());
+		
+
+	}
+	
+	
+	window.addEventListener("load",test,true);
+</script>
+<style type="text/css">
+a{
+color:blue;
+font-size:2em;
+}
+ul{
+	list-style-type:decimal;
+	-webkit-margin-before: 0;
+-webkit-margin-after: 0;
+-webkit-margin-start: 0;
+-webkit-margin-end: 0;
+-webkit-padding-start: 2em;
+}
+</style>
+<!--[if lt ie 9]>
+<script src="js/utils/html5shiv.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+<body>
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript" title="
+mozilla开发者的JS文档" >
+mozilla开发者的JS文档 >>
+</a>
+<div id="test-Platform">
+javascript中几乎所有东西都可以看做Object(对象)除了NULL和undefined之外。
+对象的定义
+var obj={};
+刚定义的对象，prototype是未定义的
+即obj.prototype是undefined的。据我所知。
+Object是内置的，在ESCMASCRIPT
+var obj2 = Object.create(Object.prototype);
+obj2也是一个对象，prototype已定义或者说是已被赋值就是Object的prototype(通过Object.create函数进行)
+https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Details_of_the_Object_Model
+javascript中的每个函数都可以被看做时一个构造函数。javascript中为了创建一个新对象可以new function_name();这将会返回一个对象，类实例。
+js中的继承与子类:<br>
+<script type="text/javascript">
+function test2(){
+function Employee(){
+	this.name = "Employee";
+	this.dept    = "abcd";
+}
+function Manager(){
+	this.reports = "Manager-reports";
+}
+Manager.prototype = new Employee();
+Manager.prototype.toString = function mngtostrng(){
+	return "[object Manager]";
+}
+var m = new Manager();
+
+m.name = "Manager";
+var emp = new Employee();
+
+console.log(m);
+console.log(emp);
+console.log("Manager 的实例 m .name = "+m.name);
+console.log("Manager 的实例 m .dept = "+m.dept);
+console.log("Manager 的实例 m .reports = "+m.reports);
+console.log("Manager isPrototypeOf Employee : " + (Manager.isPrototypeOf(Employee) ));
+console.log("Manager.prototype isPrototypeOf  emp: " + (Manager.prototype.isPrototypeOf(emp) ));
+console.log("Employee.prototype isPrototypeOf  m: " + (Employee.prototype.isPrototypeOf(m) ));
+console.log("Manager.prototype isPrototypeOf Employee : " + (Manager.__proto__.isPrototypeOf(Employee) ));
+
+var toString = Object.prototype.toString;
+
+console.log(toString.call(new Manager));
+console.log(toString.call(new Date));
+console.log(toString.call(emp));
+console.log(toString.call(m));
+console.log(m.toString());
+console.log(new Manager);
+console.log(new Employee);
+}
+window.addEventListener("load",test2,true);
+</script>
+<ul>
+<li>
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/instanceof" title="Instanceof操作符">Instanceof</a>
+</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Iterators_and_Generators" title="Iterators操作符">Iterators</a>
+</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Closures" title="Closures">Closures</a>
+</li>
+</ul>
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/h136799711/cg9eY/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+</div>
+</body>
+</html>
