@@ -1,72 +1,67 @@
-var AssetModel = {			
-		
-		parseJson:function(data){
-			Log(data);
-			if(data == undefined)
-			{
-				Log("argument of data is undefined!");
-				return ;
-			}
-		},
-		getResources:function(){			
+/** @Dependent : 依赖Jquery
+ *   @author :hebidu
+ *   @Last Modify Date : 2012-11-3
+ *   @Comment : 主要是图片资源、和音乐的管理。
+ */
+var AssetModel = {
+	jsonRes:{},
+    //解析资源描述字符串
+    parseResDesc: function(data) {
+        if (data === undefined) {
+            Log("argument of data is undefined!");
+            return;
+        }
+		jsonRes = data;
+       // jsonRes = JSON.stringify(data);
+        //Log(jsonRes);
+    },
+    //获得资源描述字符串
+    getResDesc: function(resWhich) {
+		var resdescUrl= getResUrl(resWhich);
+        var anThis = this;
+        $.getScript(resdescUrl).done(
 
-			$.getScript(mfgConfig.remoteBaseUrl+resConfig.rs1).done(
-			      function(script, textStatus){		
-					parseJson(rs1);
-					Log("success get json data.");
-			}).fail(function (jqxhr,setting,exception){
-				Log(mfgConfig.remoteBaseUrl+resConfig.rs1+"get failed!");
-			});   
+        function(responese, textStatus) {	        
+            anThis.parseResDesc(MFG_RES_DESC);
+            Log("success get data from " + resdescUrl);
+        }).fail(function(jqxhr, setting, exception) {
+            Log(resdescUrl + "get failed!");
+        });
 
-		},
-		LoadMaps:function(){
-			Log("LoadMaps");
-		},
-		LoadRoles:function(){
-			Log("LoadRoles");
-		},
-		LoadSkills:function(){
-			Log("LoadSkills");
-		},
-		LoadMusic:function(){
-			Log("LoadMusic");
-		},
-		Load:function(){
-			LoadMaps();
-			LoadRoles();
-			LoadSkills();
-			LoadMusic();
-		},//载入数据,
-		LoadData:function(){
-			if(this.isOnline()){
-				AssetCtrl.getResources();
-			}else{
-				Log("不能联网",mfgConfig.alertLevel);
-			}
-		},//载入图片资源，比较耗时的
-		LoadAsset:function(){
-			Log("LoadAsset");
-			LoadMaps();
-			LoadRoles();
-			LoadSkills();
-			LoadMusic();
-			
-		},
-		isOnline:function(){
-			return navigator.onLine;
-		},
-			//远程得到的资源,JSON数据
-		remoteResources:{}, 
-		//背景图片
-		localResources:{
-			"bgimgs":[{
-			"bgImg1":"bgtest.png",	
-			"bgImg2":"bgtest.png"
-			}],
-			"Roles":[{
-				"hy":"role1.png",
-				"hd":"role2.png"
-			}]
-		}
-
+    },
+    LoadMaps: function() {
+        Log("LoadMaps");
+		this.resources.bgs[0] = new Image();
+		this.resources.bgs[0].src = getResUrl(jsonRes.bgimgs.bg1);
+    },
+    LoadRoles: function() {
+        Log("LoadRoles");
+    },
+    LoadSkills: function() {
+        Log("LoadSkills");
+    },
+    LoadMusic: function() {
+        Log("LoadMusic");
+    },
+    //载入图片资源，比较耗时的
+    LoadAsset: function() {
+        Log("LoadAsset start");
+        this.LoadMaps();
+        this.LoadRoles();
+        this.LoadSkills();
+        this.LoadMusic();
+        Log("LoadAsset end");
+    },
+    isOnline: function() {
+        return navigator.onLine;
+    },
+    //资源
+    resources: {
+	bgs:[],
+	maps:[],
+	roles:[],
+	skills:[],
+	musics:[]
+	}
 };
+//​​
