@@ -1,3 +1,8 @@
+//依赖于IndexModel,IndexView,BaseCtrl
+//@author : hebidu 
+//@Last Modify : 2012-11-3 11:28
+//@Comments: 期望为主控制器。
+
 (function(window){
 	var fps =60;
 window.requestAnimFrame = (function(){
@@ -9,9 +14,6 @@ window.requestAnimFrame = (function(){
 				  function( callback, element){
 					window.setTimeout(callback, 60);
 				  };})();	
-
-$ = window.$;
-window.mfgVersion  = "v1.0.0";
 
 
 function IndexCtrl(){	

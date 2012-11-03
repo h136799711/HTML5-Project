@@ -1,13 +1,11 @@
-//base object		
-PREFIX_CLS  =".";
-PREFIX_ID ="#";
+//基本对象
+//@author : hebidu 
+//@Last Modify : 2012-11-3 11:28
+//@Comments: 期望为主模型。
 function BaseView(){
 	this.relativeUrl = "";
 	this.baseUrl = "";
 	this.initialize;
-		//= function(){
-			//throw new Error("subobject  must  implements the method (initialize)");
-	//};
 };
 BaseView.prototype = {
 	initialize:function(){

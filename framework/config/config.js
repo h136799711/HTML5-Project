@@ -1,3 +1,10 @@
+//依赖于window.$
+//@author : hebidu 
+//@Last Modify : 2012-11-3 11:28
+//@Comments: 期望为全局配置文件。
+
+PREFIX_CLS  =".";
+PREFIX_ID ="#";
 var mfgConfig = (function(){
 	return {
 		isDebug:true,
@@ -11,6 +18,7 @@ var mfgConfig = (function(){
 		deadLevel:1,
 		cfgLoadTime:(Date.now() || new Date().getTime()),
 		appStartTime:cfgLoadTime,
+		version:"1.0.0"
 		
 	};
 })();
@@ -41,3 +49,4 @@ function Log(info,level){
 	else
 		console.log("something happened!");
 }
+$ = window.$;

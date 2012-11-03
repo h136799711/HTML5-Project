@@ -1,4 +1,7 @@
 //依赖于window对象和Jquery 
+//@author : hebidu 
+//@Last Modify : 2012-11-3 11:28
+//@Comments: 期望为主视图。
 function IndexView(){
 		this.cls_canvasStartOver = "canvas-start-over";
 		this.cls_onstartOver = "onstart-over";
