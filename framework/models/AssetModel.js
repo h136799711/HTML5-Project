@@ -1,22 +1,23 @@
-var AssetCtrl = {			
+var AssetModel = {			
+		
 		parseJson:function(data){
 			Log(data);
+			if(data == undefined)
+			{
+				Log("argument of data is undefined!");
+				return ;
+			}
 		},
-		getResources:function(){
+		getResources:function(){			
+
 			$.getScript(mfgConfig.remoteBaseUrl+resConfig.rs1).done(
 			      function(script, textStatus){		
-					Log(rs1);
-					Log("textStatus = "+textStatus);	  
+					parseJson(rs1);
 					Log("success get json data.");
 			}).fail(function (jqxhr,setting,exception){
 				Log(mfgConfig.remoteBaseUrl+resConfig.rs1+"get failed!");
 			});   
-		/*
-			$.getJSON(mfgConfig.remoteBaseUrl+"rs1.json",
-				function(data,status,xhr){
-					Log("success get json data.");
-					parseJson(data);
-				});*/
+
 		},
 		LoadMaps:function(){
 			Log("LoadMaps");

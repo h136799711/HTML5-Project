@@ -1,4 +1,5 @@
 (function(window){
+	var fps =60;
 window.requestAnimFrame = (function(){
 				return  window.requestAnimationFrame   || 
 				  window.webkitRequestAnimationFrame || 
@@ -6,24 +7,22 @@ window.requestAnimFrame = (function(){
 				  window.oRequestAnimationFrame          || 
 				  window.msRequestAnimationFrame       || 
 				  function( callback, element){
-					window.setTimeout(callback, 1000 / 60);
-				  };
-})();	
-var document = window.document;
+					window.setTimeout(callback, 60);
+				  };})();	
+
 $ = window.$;
-Object.prototype.mfgVersion  = function (){ return "v1.0.0";};
+window.mfgVersion  = "v1.0.0";
 
 
 function IndexCtrl(){	
 	this.model = new IndexModel();
 	this.view = new IndexView();
-	};
-IndexCtrl.prototype = new BaseCtrl;
+};
+IndexCtrl.prototype = new BaseCtrl();
 IndexCtrl.prototype.initialize = function(){	
 	try{		
 		if(typeof (window.MFG) == undefined)
 		{
-			Log("Should be first time to call this action.if not,that must happened something !!");
 			return ;
 		}
 		this.view.initialize();
@@ -35,7 +34,7 @@ IndexCtrl.prototype.initialize = function(){
 }
 IndexCtrl.prototype.IndexAction = function(){
 	this.initialize();
-	Log("IndexCtrl's Call IndexAction and Initialize() successed!");
+	Log("IndexCtrl's Call IndexAction and Initialize() complete!");
 };
 
 

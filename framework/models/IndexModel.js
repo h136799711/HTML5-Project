@@ -1,4 +1,4 @@
-//include AssetCtrl
+//include AssetModel
 
 function IndexModel(){
 }
@@ -8,11 +8,13 @@ IndexModel.fn.PutMap = function(){
 };
 IndexModel.fn.initialize = function(){
 		//资源异步加载
-		Log("AssetCtrl.asyncLoad start!");
+		Log("AssetModel.asyncLoad start!");
 		$(PREFIX_ID+clsid_parms.id_start).bind("click",IndexModel.fn.onstart);
-		AssetCtrl.LoadData();
-		Log("AssetCtrl.asyncLoad end!");
+		AssetModel.LoadData();
+		Log("AssetModel.asyncLoad end!");
 };
 IndexModel.fn.onstart = function(){
-	AssetCtrl.LoadAsset();
+	mfgConfig.appStartTime = Date.now();
+	AssetModel.LoadAsset();
+
 };

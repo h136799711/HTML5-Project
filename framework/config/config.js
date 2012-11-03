@@ -8,7 +8,10 @@ var mfgConfig = (function(){
 		logLevel:5,
 		alertLevel:4,
 		errorLevel:3,
-		deadLevel:1
+		deadLevel:1,
+		cfgLoadTime:(Date.now() || new Date().getTime()),
+		appStartTime:cfgLoadTime,
+		
 	};
 })();
 var clsid_parms = {
