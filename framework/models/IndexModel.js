@@ -5,22 +5,24 @@
 
 
 function IndexModel() {
-	this.gameModel = { };
     this.initialize = function() {
-		this.bindEventHandler();
         //资源异步加载
-        Log("AssetModel.asyncLoad start!");
+        Log("AssetModel.getResDesc start!",mfgConfig.toUserLevel);
         AssetModel.getResDesc(resConfig.rs1);
-        Log("AssetModel.asyncLoad end!");
+		MFG.gameModel = new GameModel();
+		MFGEvent.addEvent(mfgEvents.loadAsset,AssetModel.LoadAsset);
+		MFGEvent.addEvent(mfgEvents.start,MFG.gameModel.Run);
+        Log("AssetModel.getResDesc end!",mfgConfig.toUserLevel);
     };
-    this.onstart = function() {
+	this.destroy = function(){
+		delete MFG.gameModel;
+		this.unbindEventHandler();
+		MFGEvent.removeEvent(mfgEvents.loadAsset);
+		MFGEvent.removeEvent(mfgEvents.start);
+	};
+    this.onstart = function(eve) {
         mfgConfig.appStartTime = Date.now();
-        AssetModel.LoadAsset();
-//按理应该在资源加载完执行
-		var canvas = document.getElementById(clsid_parms.id_canvas);
-		var ctx = canvas.getContext("2d");
-		gameModel = new GameModel(ctx);
-		gameModel.Run();
+		MFGEvent.fireEvent(mfgEvents.loadAsset);
     };
 	this.unbindEventHandler = function(){
         $(PREFIX_ID + clsid_parms.id_start).unbind("click", this.onstart);

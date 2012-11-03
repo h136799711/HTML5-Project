@@ -14,33 +14,38 @@
     function IndexCtrl() {
         this.model = new IndexModel();
         this.view = new IndexView();
-   //     this.bindEventHandler = function() {
-  //          this.view.bindEventHandler();
-//			this.model.bindEventHandler();
-  //      };
- //       this.unbindEventHandler = function() {
- //          this.view.unbindEventHandler();
-//			this.model.unbindEventHandler();
-//        };
 		this.IndexAction = function() {
             this.initialize();
             Log("IndexAction's Called  complete!");
+		};
+		this.bindEventHandler = function(){
+				MFG.view.bindEventHandler();
+				MFG.model.bindEventHandler();
 		};
 		this.initialize = function() {
 			try {
 				if (typeof(window.MFG) === undefined) {
 					return;
 				}
-		//		this.bindEventHandler();
+				if(AssetModel.isReadyToLoad)
+					this.bindEventHandler();
+				else{
+					MFGEvent.addEvent(mfgEvents.ready,this.bindEventHandler);
+				}
 				this.view.initialize();
 				this.model.initialize();
 			} catch (e) {
 				Log(e.message);
 			}
 		};
+		this.destroy = function(){
+			this.model.destroy();
+			this.view.destroy();
+
+		};
     }
 	IndexCtrl.fn = IndexCtrl.prototype = new BaseCtrl();
-
     window.MFG = new IndexCtrl();
+
 })(window);
 //

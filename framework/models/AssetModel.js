@@ -4,52 +4,78 @@
  *   @Comment : 主要是图片资源、和音乐的管理。
  */
 var AssetModel = {
-	jsonRes:{},
+	restore:function(){		
+	},
+	isReadyToLoad:false,//是否准备好载入资源(图片，音乐)
+	mapsLoaded:false,
+	rolesLoaded:false,
+	skillsLoaded:false,
+	jsonRes:{},//指向资源描述对象
     //解析资源描述字符串
     parseResDesc: function(data) {
         if (data === undefined) {
             Log("argument of data is undefined!");
             return;
         }
-		jsonRes = data;
+		this.jsonRes = data;
        // jsonRes = JSON.stringify(data);
-        //Log(jsonRes);
+        Log("数据转为JSON后: "+JSON.stringify(this.jsonRes));
+		this.isReadyToLoad = true;
+		MFGEvent.fireEvent(mfgEvents.ready);//触发ready事件
     },
     //获得资源描述字符串
     getResDesc: function(resWhich) {
-		var resdescUrl= getResUrl(resWhich);
+		if(this.isReadyToLoad) return ;//已经准备好了直接返回，
+		var resdescUrl= getResUrl(resWhich,mfgConfig.bLoadFromLocal);
         var anThis = this;
-        $.getScript(resdescUrl).done(
-
-        function(responese, textStatus) {	        
-            anThis.parseResDesc(MFG_RES_DESC);
-            Log("success get data from " + resdescUrl);
-        }).fail(function(jqxhr, setting, exception) {
-            Log(resdescUrl + "get failed!");
+        $.ajax({
+			url:resdescUrl,
+			type:"GET",
+			timeout:4000,
+			dataType:"script",
+			context:anThis,
+			success: function(){		
+				Log("成功获取资源描述。");
+				anThis.parseResDesc(MFG_RES_DESC);	
+			},
+			error:function(){
+				Log("无法从远程获取，将从本地获取！");
+				mfgConfig.bLoadFromLocal = true;
+				anThis.getResDesc(resWhich);
+			}
         });
 
     },
     LoadMaps: function() {
         Log("LoadMaps");
 		this.resources.bgs[0] = new Image();
-		this.resources.bgs[0].src = getResUrl(jsonRes.bgimgs.bg1);
+		this.resources.bgs[0].src = getResUrl(this.jsonRes.bgimgs.bg1,mfgConfig.bLoadFromLocal);
+		this.resources.bgs[0].onload = function(){
+			mapsLoaded = true;
+			Log("image onload",mfgConfig.alertLevel);
+		}
     },
     LoadRoles: function() {
         Log("LoadRoles");
+		rolesLoaded  = false;
     },
     LoadSkills: function() {
         Log("LoadSkills");
+		skillsLoaded = true;
     },
     LoadMusic: function() {
         Log("LoadMusic");
+		musicLoaded = true;
     },
     //载入图片资源，比较耗时的
     LoadAsset: function() {
-        Log("LoadAsset start");
-        this.LoadMaps();
-        this.LoadRoles();
-        this.LoadSkills();
-        this.LoadMusic();
+        Log("LoadAsset start");		
+        AssetModel.LoadMaps();
+        AssetModel.LoadRoles();
+        AssetModel.LoadSkills();
+        AssetModel.LoadMusic();
+		MFGEvent.fireEvent(mfgEvents.start);
+//按理应该在资源加载完执行
         Log("LoadAsset end");
     },
     isOnline: function() {

@@ -12,6 +12,8 @@ function IndexView() {
         $(PREFIX_CLS + clsid_parms.cls_browser).text(navigator.appName);
         var version = parseFloat(navigator.appVersion);
         $(PREFIX_CLS + clsid_parms.cls_browserVersion).text(version);
+        $(PREFIX_CLS + clsid_parms.informationForUser).hide();
+		
     };
     this.Layout = function() {
         var topleft = $(PREFIX_ID + clsid_parms.id_canvas).offset();
@@ -52,8 +54,11 @@ function IndexView() {
     this.initialize = function() {
         this.Layout();
         this.ShowDevsInfo();
-        this.bindEventHandler();
     };
+	this.destory = function(){
+		this.unbindEventHandler();
+        $(PREFIX_ID + clsid_parms.id_start).show();
+	}
 }
 IndexView.prototype = new BaseView();
 //​​

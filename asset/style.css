@@ -33,25 +33,38 @@ article {
   color:#000000;
   cursor:pointer;
 }
-div #information span {
+div #sys-information span {
 	color:#88cd44;
 	font-size:2em;
 }
- #start input{
+input  #start {
   width:50px;
   height:50px;
   position:absolute;
 }
 
-div #content{
+div #content {
 	border-color:#cceee9;
     width:800px;
 }
-#instruction ul{
+#information-for-user {
+	margin: 0 auto;
+	height:16px;
+	z-index:9999;
+	text-align: center;
+	background-color:#d7d7d7;
+}
+#information-for-user span{
+	margin: 2px auto;
+	display:block;
+	text-align: center;
+	vertical-align:middle;
+	color:#5500ff;
+}
+ #instruction ul{
 	list-style:none;
 	color:#d71133;
 }
-
 .onstart{
 background:url('start.png');
 width:64px;
