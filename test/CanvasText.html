@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Canvas Text</title>
+<meta charset="utf-8">
+<meta name="author" content="hebidu">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="generator" content="EditPlus">
+<meta name="revised" content="hebidu @2012-10-31">
+<script type="text/javascript">
+ function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        var words = text.split(' ');
+        var line = '';
+
+        for(var n = 0; n < words.length; n++) {
+          var testLine = line + words[n] + ' ';
+          var metrics = context.measureText(testLine);
+          var testWidth = metrics.width;
+          if(testWidth > maxWidth) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+          }
+          else {
+            line = testLine;
+          }
+        }
+        context.fillText(line, x, y);
+      }
+
+	function load(){
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		ctx.save();
+		ctx.fillStyle = 'blue';
+		//var i = parseInt(canvas.width * 0.01);
+		//console.log(i);
+		ctx.font ='2pt 宋体';
+		ctx.textAlign = "left";
+		ctx.fillText("Text fill! 文字 填充文字文字",10,10);
+		ctx.restore();
+		ctx.save();
+		ctx.strokeStyle = 'red';
+		ctx.font = '20px Calibri';
+		ctx.strokeText("Text Stroke!",10,100);
+		ctx.restore();
+		ctx.font = '5pt Calibri';
+		ctx.fillStyle = '#333';
+		var str =1;
+		(function st(){
+		//var measure = ctx.measureText((str));
+		//console.log("width :  "+measure.width+"\n"+"height: "+measure.height);
+		
+		ctx.clearRect(20,20,120,70);
+		ctx.fillText(str,100,50);
+		str += 1;
+		setTimeout(st,1000);
+		})();
+	}
+</script>
+<!--[if lt ie 9]>
+<script src="js/utils/html5shiv.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+<body onload="load();">
+<center>
+<canvas id="canvas" style="border:1px solid;width:640px;height:480px">123</canvas>
+</center>
+</body>
+</html>

@@ -60,13 +60,14 @@ var MFGEvent = {
         return this;
     },
     //触发事件
-    fireEvent: function(type) {
+    fireEvent: function(type,args) {
         var arrayEvent = this._listeners[type];
         if (arrayEvent instanceof Array) {
             for (var i = arrayEvent.length - 1; i >= 0; i -= 1) {
                 if (typeof arrayEvent[i] === "function") {
                     arrayEvent[i]({
-                        type: type
+                        type: type,
+						args:args
                     });
                 }
             }

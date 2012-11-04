@@ -7,8 +7,6 @@
  //@trigger loadedAsset事件 
  //@trigger start事件 ，触发游戏模型进行循环
 var AssetModel = {
-	restore:function(){		
-	},
 	isReadyToLoad:false,//是否准备好载入资源(图片，音乐)
 	mapsLoaded:false,
 	rolesLoaded:false,
