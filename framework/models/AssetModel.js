@@ -3,6 +3,9 @@
  *   @Last Modify Date : 2012-11-3
  *   @Comment : 主要是图片资源、和音乐的管理。
  */
+ //@trigger res_desc_ready事件 
+ //@trigger loadedAsset事件 
+ //@trigger start事件 ，触发游戏模型进行循环
 var AssetModel = {
 	restore:function(){		
 	},
@@ -21,7 +24,7 @@ var AssetModel = {
        // jsonRes = JSON.stringify(data);
         Log("数据转为JSON后: "+JSON.stringify(this.jsonRes));
 		this.isReadyToLoad = true;
-		MFGEvent.fireEvent(mfgEvents.ready);//触发ready事件
+		MFGEvent.fireEvent(mfgEvents.res_desc_ready);//触发ready事件
     },
     //获得资源描述字符串
     getResDesc: function(resWhich) {
@@ -49,10 +52,12 @@ var AssetModel = {
     LoadMaps: function() {
         Log("LoadMaps");
 		this.resources.bgs[0] = new Image();
-		this.resources.bgs[0].src = getResUrl(this.jsonRes.bgimgs.bg1,mfgConfig.bLoadFromLocal);
+		this.resources.bgs[0].src = getResUrl(this.jsonRes[0]["res"]["bgs"][0],mfgConfig.bLoadFromLocal);
 		this.resources.bgs[0].onload = function(){
 			mapsLoaded = true;
-			Log("image onload",mfgConfig.alertLevel);
+			Log("image onload one",mfgConfig.toUserLevel);
+			MFGEvent.fireEvent(mfgEvents.loadedAsset);
+			Log("fireEvent loadedAsset");
 		}
     },
     LoadRoles: function() {

@@ -6,12 +6,12 @@
 
 function IndexModel() {
     this.initialize = function() {
-        //资源异步加载
+        //资源加载
         Log("AssetModel.getResDesc start!",mfgConfig.toUserLevel);
         AssetModel.getResDesc(resConfig.rs1);
 		MFG.gameModel = new GameModel();
 		MFGEvent.addEvent(mfgEvents.loadAsset,AssetModel.LoadAsset);
-		MFGEvent.addEvent(mfgEvents.start,MFG.gameModel.Run);
+		MFGEvent.addEvent(mfgEvents.start,MFG.gameModel.Loop);
         Log("AssetModel.getResDesc end!",mfgConfig.toUserLevel);
     };
 	this.destroy = function(){

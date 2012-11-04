@@ -10,17 +10,18 @@
             window.setTimeout(callback, fps);
         };
     })();
-
+//addEvent res_desc_ready : binderEventHandler
     function IndexCtrl() {
         this.model = new IndexModel();
         this.view = new IndexView();
+		var that = this;
 		this.IndexAction = function() {
             this.initialize();
             Log("IndexAction's Called  complete!");
 		};
 		this.bindEventHandler = function(){
-				MFG.view.bindEventHandler();
-				MFG.model.bindEventHandler();
+				that.view.bindEventHandler();
+				that.model.bindEventHandler();
 		};
 		this.initialize = function() {
 			try {
@@ -30,7 +31,7 @@
 				if(AssetModel.isReadyToLoad)
 					this.bindEventHandler();
 				else{
-					MFGEvent.addEvent(mfgEvents.ready,this.bindEventHandler);
+					MFGEvent.addEvent(mfgEvents.res_desc_ready,this.bindEventHandler);
 				}
 				this.view.initialize();
 				this.model.initialize();

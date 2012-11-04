@@ -42,9 +42,10 @@ var resConfig = {
     rs1: "rs1.js"
 };
 var mfgEvents = {//程序中自定义的事件
-	ready:"ready",
-	start:"start",
-	loadAsset:"loadAsset",
+	res_desc_ready:"resDescReady",//准备好资源描述字符串
+	loadAsset:"loadAsset",//开始载入资源
+	start:"start",//开始游戏,游戏循环开始，但是资源未必载入成功
+	loadedAsset:"loadedAsset"//资源载入完成，此时游戏状态可以变化
 	
 };
 //返回资源的完整路径，第二个参数期望为mfgConfig.bLoadFromLocal.不应该赋其他值
