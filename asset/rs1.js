@@ -5,11 +5,11 @@ var MFG_RES_DESC= [
         skills:[
             {
                  s1:"skill_name1",
-                 urls:["skills_url1","skills_url1"]
+                 urls:"skills_url1"
             },
             {
                  s1:"skill_name2",
-                 urls:["skills_url1","skills_url1"]
+                 urls:"skills_url1"
             }
             ]
          }},
