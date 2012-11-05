@@ -1,3 +1,12 @@
+window.requestAnimFrame = (function() {
+        var fps = 33;
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        function(callback, element) {
+            window.setTimeout(callback, fps);
+        };
+})();
+
+
 if (!window.localStorage) {
   Object.defineProperty(window, "localStorage", new (function () {
     var aKeys = [], oStorage = {};

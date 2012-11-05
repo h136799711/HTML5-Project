@@ -1,9 +1,49 @@
+
+//依赖 AssetModel,config
+//@author : hebidu 
+//@Last Modify : 2012-11-3 11:28
+//@Comments: 期望为主模型。
+
+//添加loadAsset 事件，触发loadAsset事件
+//添加start 事件
+function IndexModel() {
+    this.initialize = function() {
+        //资源加载
+        Log("AssetModel.getResDesc start!",mfgConfig.toUserLevel);
+        AssetModel.getResDesc(resConfig.rs1);
+		MFG.gameCtrl = new GameCtrl();
+		MFGEvent.addEvent(mfgEvents.loadAsset,AssetModel.LoadAsset);
+		MFGEvent.addEvent(mfgEvents.start,MFG.gameCtrl.Loop);
+    };
+	this.destroy = function(){
+		delete MFG.gameCtrl;
+		this.unbindEventHandler();
+		MFGEvent.removeEvent(mfgEvents.loadAsset,AssetModel.LoadAsset);
+		MFGEvent.removeEvent(mfgEvents.start,MFG.gameCtrl.Loop);
+	};
+	//点击开始按钮时触发
+    this.onstart = function(eve) {
+        mfgConfig.appStartTime = Date.now();
+		MFGEvent.fireEvent(mfgEvents.loadAsset);//开始载入资源
+    };
+	this.unbindEventHandler = function(){
+        $(PREFIX_ID + clsid_parms.id_start).unbind("click", this.onstart);
+	};
+	this.bindEventHandler = function(){
+        $(PREFIX_ID + clsid_parms.id_start).bind("click", this.onstart);
+	};
+
+}
+IndexModel.fn = IndexModel.prototype = new BaseModel();
+//
+
 //依赖于window对象和Jquery 
 //@author : hebidu 
 //@Last Modify : 2012-11-3 11:28
 //@Comments: 期望为主视图。
 
 function IndexView() {
+	//显示客服端浏览器的信息
     this.ShowDevsInfo = function() {
         $(PREFIX_CLS + clsid_parms.cls_monitorWidth).text(window.screen.width);
         $(PREFIX_CLS + clsid_parms.cls_monitorHeight).text(window.screen.height);
@@ -28,13 +68,13 @@ function IndexView() {
         $(PREFIX_ID + clsid_parms.id_start).removeClass(clsid_parms.cls_onstart);
         $(PREFIX_ID + clsid_parms.id_start).addClass(clsid_parms.cls_onstartOver);
         $(PREFIX_ID + clsid_parms.id_canvas).addClass(clsid_parms.cls_canvasStartOver);
-        Log("startmouseover");
+        //Log("startmouseover");
     };
     this.startmouseout = function() {
         $(PREFIX_ID + clsid_parms.id_start).removeClass(clsid_parms.cls_onstartOver);
         $(PREFIX_ID + clsid_parms.id_start).addClass(clsid_parms.cls_onstart);
         $(PREFIX_ID + clsid_parms.id_canvas).removeClass(clsid_parms.cls_canvasStartOver);
-        Log("startmouseout");
+        //Log("startmouseout");
 
     };
     this.onstart = function() {
@@ -62,3 +102,49 @@ function IndexView() {
 }
 IndexView.prototype = new BaseView();
 //​​
+
+//依赖于IndexModel,IndexView,BaseCtrl
+//@author : hebidu 
+//@Last Modify : 2012-11-3 11:28
+//@Comments: 期望为主控制器。
+(function(window) {
+
+//addEvent res_desc_ready : binderEventHandler
+    function IndexCtrl() {
+        this.model = new IndexModel();
+        this.view = new IndexView();
+		var that = this;
+		this.IndexAction = function() {
+            this.initialize();
+            Log("IndexAction's Called  complete!");
+		};
+		this.bindEventHandler = function(){
+				that.view.bindEventHandler();
+				that.model.bindEventHandler();
+		};
+		this.initialize = function() {
+			try {
+				if (typeof(window.MFG) === undefined) {
+					return;
+				}
+				if(AssetModel.isReadyToLoad)
+					this.bindEventHandler();
+				else{
+					MFGEvent.addEvent(mfgEvents.res_desc_ready,this.bindEventHandler);
+				}
+				this.view.initialize();
+				this.model.initialize();
+			} catch (e) {
+				Log(e.message);
+			}
+		};
+		this.destroy = function(){
+			this.model.destroy();
+			this.view.destroy();
+		};
+    }
+	IndexCtrl.fn = IndexCtrl.prototype = new BaseCtrl();
+    window.MFG = new IndexCtrl();
+
+})(window);
+//
