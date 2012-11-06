@@ -66,14 +66,14 @@ div #content {
 	color:#d71133;
 }
 .onstart{
-background:url('start.png');
+background:url('images/start.png');
 width:64px;
 height:64px;
 z-index:999;
 text-indent:-9999px;
 }
 .onstart-over{
-background:url('start-over.png');
+background:url('images/start-over.png');
 width:64px;
 height:64px;
 z-index:999;

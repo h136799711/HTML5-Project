@@ -10,20 +10,29 @@ var GS_INIT = 0X0002;
 var GS_RUNNING = 0X0003;
 var GS_PAUSING = 0X0004; //暂停
 var GS_RESTART = 0X0005; //重新开始 , 
+var PRE_INIT = 0X0015; //重新开始 , 
 var GS_EXIT = 0XFFFF; //退出游戏，关闭页面
 function GameModel() {
     this.ctx;
 	this.screenWidth ;
 	this.screenHeight ;
     var that = this;
-    this.state = GS_RES_LOADING;
+    this.state = PRE_INIT;
+	//背景，角色，技能，音效的载入进度
+	this.assetLoadingStatus  = 0;
+	
+	this.level = 0;//游戏关卡
     this.Loop = function() {
 		
 		switch (that.state) {
+		case PRE_INIT:
+			{
+				MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
+				that.setResLoading();
+			}break;
         case GS_RES_LOADING:
-            {			
+            {							
                 that.ResLoading();
-				MFGEvent.addEvent(mfgEvents.loadedAsset,that.setInit);
             }break;
         case GS_PAUSING:
             {
@@ -31,6 +40,8 @@ function GameModel() {
             }break;
         case GS_INIT:
             {
+
+				MFGEvent.removeEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
                 that.Init();
             }break;
         case GS_RUNNING:
@@ -39,6 +50,7 @@ function GameModel() {
             }break;
         case GS_RESTART:
             {
+				MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
 				//InputModel.Loop();
                 that.Restart();
             }break;
@@ -71,22 +83,7 @@ function GameModel() {
     //游戏状态
     this.ResLoading = function() {       
         //显示资源载入
-        Log("RES_LOADING GameModel!", mfgConfig.toUserLevel);
-		
-    };
-    this.Running = function() {
-		InputModel.Loop();
-
-		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);
-        
-		that.Write("Running GameModel! ",100,100);
-        Log("Running GameModel!", mfgConfig.toUserLevel);
-	
-    };
-    this.Init = function() {
-		console.log("Init");
-		InputModel.Init();
-		if(typeof MFG.gameCtrl.ctx === "undefined")
+		if(typeof that.ctx === "undefined")
 		{
 			var canvas = document.getElementById(clsid_parms.id_canvas);
 			if (!canvas || typeof canvas === "undefined") {
@@ -96,19 +93,42 @@ function GameModel() {
 			this.screenWidth =  mfgConfig.screenWidth;
 			this.screenHeight = mfgConfig.screenHeight;
 			var ctx = canvas.getContext("2d");
-			MFG.gameCtrl.ctx = that.ctx = ctx;
-        
+			ctx.font ="10px serif";
+			that.ctx = ctx;
+			
 		}
-			if (typeof(that.ctx) === "undefined") {
+		if (typeof(that.ctx) === "undefined") {
             Log("canvas context is undefined");
             return;
         }
+		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
+
+		that.Write("资源载入中...."+that.assetLoadingStatus+"%.",10,20);
+		//that.Write("角色资源载入..."+that.rolesLoadingStatus+"%.",10,40);
+		//that.Write("技能图片载入..."+that.skillsLoadingStatus+"%.",10,60);
+		//that.Write("音效载入中......."+that.musicLoadingStatus+"%.",10,80);
+        Log("RES_LOADING GameModel!", mfgConfig.toUserLevel);
+		if(this.assetLoadingStatus  >= 100 )
+		{
+			console.log(AssetModel.resLevel);
+			this.setInit();
+		}
+    };
+    this.Init = function() {
+		console.log("Init");
+		InputModel.Init();
 		InputModel.bindEventListener();
 		that.ctx.save();
-        that.ctx.drawImage(AssetModel.resources.bgs[0], 0, 0);
+        that.ctx.drawImage(AssetModel.getBgs(0,0), 0, 0);
 		that.ctx.restore();
 		that.setRunning();
         Log("Init GameModel!", mfgConfig.toUserLevel);
+    };
+    this.Running = function() {
+		InputModel.Loop();
+		//that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
+        Log("Running GameModel!", mfgConfig.toUserLevel);
+	
     };
     this.Pausing = function() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
@@ -129,20 +149,25 @@ function GameModel() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
 		that.Write("Exit GameModel! ",100,100);
         Log("Exit GameModel!", mfgConfig.toUserLevel);
-
+		
     };
 	this.Write = function(info,x,y){
 		if(typeof(that.ctx) === "undefined") {
 			Log("还未定义ctx");
 			return ;
 		}
-		that.ctx.font = "12pt Carbir";
+		that.ctx.textAlign = "left";
 		that.ctx.fillStyle = 'blue';
 		that.ctx.fillText(info,x,y);
 	};
 
-
-
+	this.setAssetLoadingStatus= function(ev){
+		that.assetLoadingStatus = parseInt(100*ev.args.loaded / ev.args.totalLoad);
+	};
+	
+	this.drawImage = function(img){
+		
+	}
 
 
 

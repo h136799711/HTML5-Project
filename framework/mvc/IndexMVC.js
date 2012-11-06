@@ -12,19 +12,19 @@ function IndexModel() {
         Log("AssetModel.getResDesc start!",mfgConfig.toUserLevel);
         AssetModel.getResDesc(resConfig.rs1);
 		MFG.gameCtrl = new GameCtrl();
-		MFGEvent.addEvent(mfgEvents.loadAsset,AssetModel.LoadAsset);
+		MFGEvent.addEvent(mfgEvents.assetLoad,AssetModel.LoadAsset);
 		MFGEvent.addEvent(mfgEvents.start,MFG.gameCtrl.Loop);
     };
 	this.destroy = function(){
 		delete MFG.gameCtrl;
 		this.unbindEventHandler();
-		MFGEvent.removeEvent(mfgEvents.loadAsset,AssetModel.LoadAsset);
+		MFGEvent.removeEvent(mfgEvents.assetLoad,AssetModel.LoadAsset);
 		MFGEvent.removeEvent(mfgEvents.start,MFG.gameCtrl.Loop);
 	};
 	//点击开始按钮时触发
     this.onstart = function(eve) {
         mfgConfig.appStartTime = Date.now();
-		MFGEvent.fireEvent(mfgEvents.loadAsset);//开始载入资源
+		MFGEvent.fireEvent(mfgEvents.assetLoad);//开始载入资源
     };
 	this.unbindEventHandler = function(){
         $(PREFIX_ID + clsid_parms.id_start).unbind("click", this.onstart);
@@ -130,7 +130,7 @@ IndexView.prototype = new BaseView();
 				if(AssetModel.isReadyToLoad)
 					this.bindEventHandler();
 				else{
-					MFGEvent.addEvent(mfgEvents.res_desc_ready,this.bindEventHandler);
+					MFGEvent.addEvent(mfgEvents.resDescReady,this.bindEventHandler);
 				}
 				this.view.initialize();
 				this.model.initialize();

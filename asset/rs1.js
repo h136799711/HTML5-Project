@@ -1,47 +1,33 @@
 var MFG_RES_DESC= [
     {res:{//资源1
-        bgs:["bgtest.jpg","2.png"],//背景图片
-        roles:["r1.png","r2.jpg"],//角色图片
+        bgs:["bgtest.jpg","g/loading.jpg"],//背景图片
+        roles:["RYU1/RYU1_crouch.gif","RYU1/RYU1_wait.gif"],//角色图片
         skills:[
             {
-                 s1:"skill_name1",
-                 urls:"skills_url1"
+                 name:"s_001",
+                 url:"RYU1/RYU1_light_kick11.gif"
             },
             {
-                 s1:"skill_name2",
-                 urls:"skills_url1"
+                 name:"s_002",
+                 url:"RYU1/RYU1_light_kick.gif"
             }
             ]
          }},
     {res:{//资源2
-        bgs:["1.jpg"],        
-        roles:["r3.png","r4.jpg"],//角色图片
+        bgs:["g/behind.gif"],        
+        roles:["RYU2/RYU2_after_impact_boxing.gif","RYU2/RYU2_after_whirl_kick.gif"],//角色图片
          skills:[
             {
-                 s1:"skill_name1",
-                 urls:["skills_url1","skills_url1"]
+                 name:"s_003",
+                 url:["RYU2/RYU2_after_impact_boxing.gif"]
             },
             {
-                 s1:"skill_name2",
-                 urls:["skills_url1","skills_url1"]
+                 name:"s_004",
+                 url:["RYU2/RYU2_before_fall_down.gif"]
             }
             ]
         
     }},
-    {res:{//资源3
-        bgs:["1.png","2.jpg","3.jpg"],
-        roles:["r4.png","r5.jpg"],//角色图片
-         skills:[
-            {
-                 s1:"skill_name1",
-                 urls:["skills_url1","skills_url1"]
-            },
-            {
-                 s1:"skill_name2",
-                 urls:["skills_url1","skills_url1"]
-            }
-            ]
-    }}            
            ];
 
 /**
@@ -52,7 +38,7 @@ var MFG_RES_DESC= [
 * 对象res中包含bgs,roles,skills 3个数组类型
 * bgs字符串数组类型 : 背景图片文件名
 * roles字符串数组类型 : 角色图片文件名
-* 角色下标对应着资源配置中的角色数组。
-* skills字符串数组类型，技能名， 图片路径数组
+* skills字符串数组类型，技能名， 图片路径数组,
+* 技能名为 s_001 - s_999，
 */
 		   //

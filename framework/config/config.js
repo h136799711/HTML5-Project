@@ -39,13 +39,15 @@ var clsid_parms = {
 //资源的相对路径和资源描述符对象的文件名
 var resConfig = {
 	resUrl_relative:"asset/",
-    rs1: "rs1.js"
+    rs1: "rs1.js",
+	imgsUrl_relative:"images/"
 };
 var mfgEvents = {//程序中自定义的事件
-	res_desc_ready:"resDescReady",//准备好资源描述字符串
-	loadAsset:"loadAsset",//开始载入资源
+	resDescReady:"resDescReady",//准备好资源描述字符串
+	assetLoad:"assetLoad",//开始载入资源
+	assetLoading:"assetLoading",//开始载入资源
+
 	start:"start",//开始游戏,游戏循环开始，但是资源未必载入成功
-	loadedAsset:"loadedAsset"//资源载入完成，此时游戏状态可以变化
 	
 };
 //返回资源的完整路径，第二个参数期望为mfgConfig.bLoadFromLocal.不应该赋其他值

@@ -6,13 +6,28 @@
  //@trigger res_desc_ready事件 
  //@trigger loadedAsset事件 
  //@trigger start事件 ，触发游戏模型进行循环
- var getLoop = 0;
-var AssetModel = {
-	isReadyToLoad:false,//是否准备好载入资源(图片，音乐)
-	mapsLoaded:false,
-	rolesLoaded:false,
-	skillsLoaded:false,
-	jsonRes:{},//指向资源描述对象
+ /*
+	resLevel =   [ 
+	[Object ]
+		=>bgs [Array]
+		=>roles[Array]
+		=>skills[Array]
+	]
+	需要有一个文件来描述
+	技能名: 技能描述
+		(伤害,帧数，动画序列，动画效果easein)
+	角色:
+		角色名字，角色状态
+		角色技能，技能触发表
+	
+ */
+var AssetModel = {	
+
+	getLoop : 0,
+	//资源
+	resLevel : [],
+	loaded:0,
+	totalLoad:0,	
     //解析资源描述字符串
     parseResDesc: function(data) {
         if (data === undefined) {
@@ -24,45 +39,48 @@ var AssetModel = {
 			Log("已经准备好，无需再解析");
 			return ;
 		}
-		this.jsonRes = (data);
+		//指向资源描述对象
        // jsonRes = JSON.stringify(data);
-//        Log("数据转为JSON后: "+JSON.stringify(this.jsonRes));
+//        Log("数据转为JSON后: "+JSON.stringify(data));
 		this.isReadyToLoad = true;
-		Log(this.jsonRes);
-		for(var i=this.jsonRes .length-1;i>=0;i--)
+		Log(data);
+		for(var i=0;i<data .length;i++)
 		{
 			var objtmp =  new Object();
 			var j;
-			var tmp = this.jsonRes[i]["res"]["bgs"];
+			var tmp = data[i]["res"]["bgs"];
 			Log("背景资源数目:"+tmp.length);
 			objtmp["bgs"] = [];
-			objtmp["bgs"].push(0);//标记已载入资源数目
-			for( j=tmp.length-1;j>=0;j--)
+		//	objtmp["bgs"].push(0);//标记已载入资源数目
+			this.totalLoad += tmp.length;
+			for( j=0;j<tmp.length;j++)
 			{
 				console.log(tmp[j]);
-				objtmp["bgs"].push(tmp[j]);
+				objtmp["bgs"].push({bg_url:tmp[j],bg_img:null});
 			}
-			tmp = this.jsonRes[i]["res"]["roles"];
+			tmp = data[i]["res"]["roles"];
 			Log("角色资源数目:"+tmp.length);			
 			objtmp["roles"] = [];
-			objtmp["roles"].push(0);//标记已载入资源数目
+		//	objtmp["roles"].push(0);//标记已载入资源数目
+			this.totalLoad += tmp.length;
 			for( j=tmp.length-1;j>=0;j--)
 			{
 				console.log(tmp[j]);
-				objtmp["roles"].push(tmp[j]);
+				objtmp["roles"].push({role_url:tmp[j],role_img:null});
 				
 			}
-			tmp = this.jsonRes[i]["res"]["skills"];
+			tmp = data[i]["res"]["skills"];
 			Log("技能资源数目:"+tmp.length);	
 			objtmp["skills"] = [];
-			objtmp["skills"].push(0);//标记已载入资源数目
+		//	objtmp["skills"].push(0);//标记已载入资源数目
+			this.totalLoad += tmp.length;
 			for( j=tmp.length-1;j>=0;j--)
 			{
 				console.log(tmp[j]);
-				objtmp["skills"].push(tmp[j]);
+				objtmp["skills"].push({skill_name:tmp[j].name,skill_url:tmp[j].url,skill_img:null});
 			}
 			/*
-			tmp = this.jsonRes[i]["res"]["musics"];
+			tmp = data[i]["res"]["musics"];
 			Log("音乐资源数目:"+tmp.length);
 			objtmp["musics"] = [];
 			objtmp["musics"].push(0);//标记已载入资源数目
@@ -75,14 +93,9 @@ var AssetModel = {
 		}
 		console.log("资源解析后的结果: ");
 		console.log(this.resLevel);
-
-
-
-
-
-
-		MFGEvent.fireEvent(mfgEvents.res_desc_ready);//触发ready事件
+		MFGEvent.fireEvent(mfgEvents.resDescReady);//触发ready事件		
 		
+	
     },
     //获得资源描述字符串
     getResDesc: function(resWhich) {
@@ -105,6 +118,7 @@ var AssetModel = {
 			dataType:"script",
 			context:anThis,
 			success: function(){
+				getLoop = 0;
 				if(mfgConfig.bLoadFromLocal)
 				{
 					Log("从本地，成功获取资源描述。");
@@ -119,73 +133,106 @@ var AssetModel = {
 			},
 			error:function(){
 				Log("无法从远程获取，将从本地获取！");
-				if(getLoop > 4) {
+				if(this.getLoop > 3) {
 					Log("从本地，远程，缓存都无法获取到数据。");
 				}
 				mfgConfig.bLoadFromLocal = !mfgConfig.bLoadFromLocal;
-				getLoop ++;
+				this.getLoop ++;
 				anThis.getResDesc(resWhich);
 			}
         });
 
     },
-    LoadMaps: function() {
-        Log("LoadMaps");
-		this.resources.bgs[0] = new Image();
-		this.resources.bgs[0].src = getResUrl(this.jsonRes[0]["res"]["bgs"][0],mfgConfig.bLoadFromLocal);
-		this.resources.bgs[0].onload = function(){
-			mapsLoaded = true;
-			Log("image onload one",mfgConfig.toUserLevel);
-			MFGEvent.fireEvent(mfgEvents.loadedAsset);
-			Log("fireEvent loadedAsset");
+
+
+	
+    LoadBgs: function(bgs) {
+        Log("BgsLoding....");
+		for(var j=0,length = bgs.length ;j<length;j++)
+		{
+				var img = new Image();
+				img.src = getResUrl(resConfig.imgsUrl_relative + bgs[j].bg_url);	
+				this.bindImageEventHandler(img);
+				bgs[j].bg_img = img;
 		}
     },
-    LoadRoles: function() {
-        Log("LoadRoles");
-		rolesLoaded  = false;
+    LoadRoles: function(roles) {
+        Log("rolesLoding....");    
+
+		for(var j=0,length = roles.length ;j<length;j++)
+		{
+				var img = new Image();
+				img.src = getResUrl(resConfig.imgsUrl_relative + roles[j].role_url);	
+				this.bindImageEventHandler(img);
+				roles[j].role_img = img;
+		
+		}
+
     },
-    LoadSkills: function() {
-        Log("LoadSkills");
-		skillsLoaded = true;
+    LoadSkills: function(skills) {
+        Log("skillsLoding....");    
+
+		for(var j=0,length = skills.length ;j<length;j++)
+		{
+				var img = new Image();
+				img.src = getResUrl(resConfig.imgsUrl_relative + skills[j].skill_url);	
+				this.bindImageEventHandler(img);
+				skills[j].skill_img = img;
+		
+		}
     },
     LoadMusic: function() {
-        Log("LoadMusic");
-		musicLoaded = true;
+        Log("musicsLoding....");    
+
     },
     //载入图片资源，比较耗时的
     LoadAsset: function() {
-        Log("LoadAsset start");		
-        AssetModel.LoadMaps();
-        AssetModel.LoadRoles();
-        AssetModel.LoadSkills();
-        AssetModel.LoadMusic();
+        Log("LoadAsset start");	
+		for(var i=0;i<AssetModel.resLevel.length;i++)
+		{
+			var tmp = AssetModel.resLevel[i]["bgs"];
+			AssetModel.LoadBgs(tmp);
+			var tmp = AssetModel.resLevel[i]["roles"];
+			AssetModel.LoadRoles(tmp);
+			var tmp = AssetModel.resLevel[i]["skills"];
+			AssetModel.LoadSkills(tmp);
+			AssetModel.LoadMusic(tmp);
+		}
 		MFGEvent.fireEvent(mfgEvents.start);
-//按理应该在资源加载完执行
-        Log("LoadAsset end");
+		
+		//setTimeout(self.tmp,2000);
     },
     isOnline: function() {
         return navigator.onLine;
     },
-	resLevel : [
-	],
-    //资源
-    resources: {
-	bgs:[],
-	maps:[],
-	roles:[],
-	skills:[],
-	musics:[]
-	},
+	//绑定图片载入相关事件
 	bindImageEventHandler:function(img){
-		img.onerror = function(){ console.log("img.onerror")};
-		img.onabort = function(){
-		console.log(img.obabort);};
-		img.onload = function(){
-			AssetModel.mapsLoaded = true;
-			Log("image onload one",mfgConfig.toUserLevel);
-			MFGEvent.fireEvent(mfgEvents.loadedAsset);
-			Log("fireEvent loadedAsset");
-		};
+		img.onerror = this.imgOnError;
+		img.onabort =this.imgOnAbort;
+		img.onload = this.imgOnLoad;
+	},
+	imgOnLoad : function(){
+		MFGEvent.fireEvent(mfgEvents.assetLoading,{loaded:++AssetModel.loaded,totalLoad:	AssetModel.totalLoad});
+		Log(AssetModel.loaded);
+		Log(AssetModel.totalLoad);
+		Log("imgOnLoad");
+	},
+	imgOnError:function(type){
+		Log("图片获取失败.");
+	},
+	imgOnAbort : function(){
+		Log("Image On Abort.");
+	},
+	/*根据关数，背景下标获得背景图片*/
+	getBgs:function(level,index){
+		return this.resLevel[level]["bgs"][index].bg_img;
+	},
+	/*根据关数，技能名字获得技能图片*/
+	getSkill:function(level,skill_name){
+	}
+	/*根据关数，角色对象获得角色图片 (未定)*/
+	getRole:function(level,role){
+	
 	}
 };
 //​​
