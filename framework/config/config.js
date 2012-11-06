@@ -33,7 +33,9 @@ var clsid_parms = {
     cls_browserVersion: "browser-version",
     id_canvas: "canvas",//canvas
     id_start: "start",//开始按钮
-	id_information:"information-for-user"//显示给用户的信息，不便于在游戏中显示的，比如 加载资源的信息
+	id_information:"information-for-user",//显示给用户的信息，不便于在游戏中显示的，比如 加载资源的信息
+	id_closeLight:"closeLight",//关灯按钮
+	id_mask:"mask"//关灯遮罩
 };
 //资源配置文件
 //资源的相对路径和资源描述符对象的文件名

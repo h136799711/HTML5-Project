@@ -94,7 +94,7 @@ var AssetModel = {
 		console.log("资源解析后的结果: ");
 		console.log(this.resLevel);
 		MFGEvent.fireEvent(mfgEvents.resDescReady);//触发ready事件		
-		
+		console.log("点击下方的开始按钮，开始加载游戏吧!");
 	
     },
     //获得资源描述字符串
@@ -224,15 +224,16 @@ var AssetModel = {
 		Log("Image On Abort.");
 	},
 	/*根据关数，背景下标获得背景图片*/
-	getBgs:function(level,index){
+	getBg:function(level,index){
 		return this.resLevel[level]["bgs"][index].bg_img;
 	},
 	/*根据关数，技能名字获得技能图片*/
 	getSkill:function(level,skill_name){
-	}
+			this.resLevel[level]["skills"]
+	},
 	/*根据关数，角色对象获得角色图片 (未定)*/
 	getRole:function(level,role){
-	
+		
 	}
 };
 //​​

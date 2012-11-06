@@ -12,7 +12,6 @@ function BaseView() {
 	this.destory = function(){
 		throw new Error("subObject must implemetns the method (destroy) ");
 	};
-    Log("new BaseView()");
 }
 
 //base model

@@ -57,12 +57,16 @@ function IndexView() {
     };
     this.Layout = function() {
         var topleft = $(PREFIX_ID + clsid_parms.id_canvas).offset();
+		$(PREFIX_ID + clsid_parms.id_closeLight).offset({top:2,left:topleft.left});
         topleft.top = topleft.top + $(PREFIX_ID + clsid_parms.id_canvas).height() / 2;
         topleft.left = topleft.left + $(PREFIX_ID + clsid_parms.id_canvas).width() / 2;
         topleft.top = topleft.top - 32;
         topleft.left = topleft.left - 32;
         $(PREFIX_ID + clsid_parms.id_start).offset(topleft);
         $(PREFIX_ID + clsid_parms.id_start).addClass(clsid_parms.cls_onstart);
+		$(PREFIX_ID+ clsid_parms.id_mask).css("height",$(document).height());
+		$(PREFIX_ID+ clsid_parms.id_mask).css("width",$(document).width());
+		$(PREFIX_ID+ clsid_parms.id_mask).css("background-color","#000");
     };
     this.startmouseover = function() {
         $(PREFIX_ID + clsid_parms.id_start).removeClass(clsid_parms.cls_onstart);
@@ -84,13 +88,14 @@ function IndexView() {
         $(PREFIX_ID + clsid_parms.id_start).bind("mouseover", this.startmouseover);
         $(PREFIX_ID + clsid_parms.id_start).bind("mouseout", this.startmouseout);
         $(PREFIX_ID + clsid_parms.id_start).bind("click", this.onstart);
+        $(PREFIX_ID + clsid_parms.id_closeLight).bind("click", this.toggleLight);
     };
     this.unbindEventHandler = function() {
         $(PREFIX_ID + clsid_parms.id_start).unbind("mouseover", this.startmouseover);
         $(PREFIX_ID + clsid_parms.id_start).unbind("mouseout", this.startmouseout);
         $(PREFIX_ID + clsid_parms.id_start).unbind("click", this.onstart);
     };
-
+	
     this.initialize = function() {
         this.Layout();
         this.ShowDevsInfo();
@@ -98,6 +103,18 @@ function IndexView() {
 	this.destory = function(){
 		this.unbindEventHandler();
         $(PREFIX_ID + clsid_parms.id_start).show();
+	},
+	this.toggleLight = function(){
+		if($(PREFIX_ID+ clsid_parms.id_mask).css("visibility") == "hidden")
+		{		
+			$(PREFIX_ID+clsid_parms.id_mask).css("visibility","visible");
+			$(PREFIX_ID+clsid_parms.id_canvas).css("position","absolute");
+			Log("hidden");
+		}else{
+			$(PREFIX_ID+ clsid_parms.id_mask).css("visibility","hidden");
+			$(PREFIX_ID+clsid_parms.id_canvas).css("position","relative");	
+			Log("show");
+		}
 	}
 }
 IndexView.prototype = new BaseView();
@@ -121,6 +138,7 @@ IndexView.prototype = new BaseView();
 		this.bindEventHandler = function(){
 				that.view.bindEventHandler();
 				that.model.bindEventHandler();
+				Log("点击下方的开始按钮，开始加载游戏吧!",mfgConfig.toUserLevel);
 		};
 		this.initialize = function() {
 			try {

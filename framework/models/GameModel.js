@@ -14,8 +14,8 @@ var PRE_INIT = 0X0015; //重新开始 ,
 var GS_EXIT = 0XFFFF; //退出游戏，关闭页面
 function GameModel() {
     this.ctx;
-	this.screenWidth ;
-	this.screenHeight ;
+	this.screenWidth =720;
+	this.screenHeight = 540;
     var that = this;
     this.state = PRE_INIT;
 	//背景，角色，技能，音效的载入进度
@@ -92,7 +92,11 @@ function GameModel() {
 			}
 			this.screenWidth =  mfgConfig.screenWidth;
 			this.screenHeight = mfgConfig.screenHeight;
+
+			canvas.setAttribute("width",this.screenWidth);
+			canvas.setAttribute("height",this.screenHeight);
 			var ctx = canvas.getContext("2d");
+		
 			ctx.font ="10px serif";
 			that.ctx = ctx;
 			
@@ -107,7 +111,7 @@ function GameModel() {
 		//that.Write("角色资源载入..."+that.rolesLoadingStatus+"%.",10,40);
 		//that.Write("技能图片载入..."+that.skillsLoadingStatus+"%.",10,60);
 		//that.Write("音效载入中......."+that.musicLoadingStatus+"%.",10,80);
-        Log("RES_LOADING GameModel!", mfgConfig.toUserLevel);
+        Log("RES_LOADING GameModel!");
 		if(this.assetLoadingStatus  >= 100 )
 		{
 			console.log(AssetModel.resLevel);
@@ -118,22 +122,21 @@ function GameModel() {
 		console.log("Init");
 		InputModel.Init();
 		InputModel.bindEventListener();
-		that.ctx.save();
-        that.ctx.drawImage(AssetModel.getBgs(0,0), 0, 0);
-		that.ctx.restore();
 		that.setRunning();
-        Log("Init GameModel!", mfgConfig.toUserLevel);
+        Log("Init GameModel!");
+        Log("游戏愉快!   : )  ",mfgConfig.toUserLevel);
     };
     this.Running = function() {
 		InputModel.Loop();
-		//that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
-        Log("Running GameModel!", mfgConfig.toUserLevel);
+		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
+        that.drawBG();
+		Log("Running GameModel!");
 	
     };
     this.Pausing = function() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
 		that.Write("Pausing GameModel! ",100,100);
-        Log("Pausing GameModel!", mfgConfig.toUserLevel);
+        Log("Pausing GameModel!");
 		
 		
     };
@@ -141,19 +144,19 @@ function GameModel() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
 		that.Write("Restart GameModel! ",100,100);
 		InputModel.unbindEventListener();
-        Log("Restart GameModel!", mfgConfig.toUserLevel);
+        Log("Restart GameModel!");
 		
 		that.setInit();
     };
     this.Exit = function() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
 		that.Write("Exit GameModel! ",100,100);
-        Log("Exit GameModel!", mfgConfig.toUserLevel);
+        Log("Exit GameModel!");
 		
     };
 	this.Write = function(info,x,y){
 		if(typeof(that.ctx) === "undefined") {
-			Log("还未定义ctx");
+			//Log("还未定义ctx");
 			return ;
 		}
 		that.ctx.textAlign = "left";
@@ -165,8 +168,8 @@ function GameModel() {
 		that.assetLoadingStatus = parseInt(100*ev.args.loaded / ev.args.totalLoad);
 	};
 	
-	this.drawImage = function(img){
-		
+	this.drawBG = function(){
+        that.ctx.drawImage(AssetModel.getBg(0,0), 0, 0,this.screenWidth,this.screenHeight);
 	}
 
 
