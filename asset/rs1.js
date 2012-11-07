@@ -1,6 +1,6 @@
 var MFG_RES_DESC= [
     {res:{//资源1
-        bgs:["bgtest.jpg","g/loading.jpg"],//背景图片
+        bgs:["g/loading.jpg","bgtest.jpg"],//背景图片
         roles:["RYU1/RYU1_crouch.gif","RYU1/RYU1_wait.gif"],//角色图片
         skills:[
             {

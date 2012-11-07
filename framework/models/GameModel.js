@@ -97,7 +97,6 @@ function GameModel() {
 			canvas.setAttribute("height",this.screenHeight);
 			var ctx = canvas.getContext("2d");
 		
-			ctx.font ="10px serif";
 			that.ctx = ctx;
 			
 		}
@@ -107,15 +106,14 @@ function GameModel() {
         }
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
 
-		that.Write("资源载入中...."+that.assetLoadingStatus+"%.",10,20);
-		//that.Write("角色资源载入..."+that.rolesLoadingStatus+"%.",10,40);
-		//that.Write("技能图片载入..."+that.skillsLoadingStatus+"%.",10,60);
-		//that.Write("音效载入中......."+that.musicLoadingStatus+"%.",10,80);
-        Log("RES_LOADING GameModel!");
+		that.ctx.font ="20pt 宋体";
+		that.Write("资源载入中...."+that.assetLoadingStatus+"%.",10,24,"#5d7");
+		
+	   Log("RES_LOADING GameModel!");
 		if(this.assetLoadingStatus  >= 100 )
 		{
 			console.log(AssetModel.resLevel);
-			this.setInit();
+			setTimeout(this.setInit,3000);
 		}
     };
     this.Init = function() {
@@ -134,11 +132,9 @@ function GameModel() {
 	
     };
     this.Pausing = function() {
-		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
-		that.Write("Pausing GameModel! ",100,100);
-        Log("Pausing GameModel!");
 		
-		
+		Log("Pausing GameModel!");
+			
     };
     this.Restart = function() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
@@ -154,13 +150,13 @@ function GameModel() {
         Log("Exit GameModel!");
 		
     };
-	this.Write = function(info,x,y){
+	this.Write = function(info,x,y,color){
 		if(typeof(that.ctx) === "undefined") {
 			//Log("还未定义ctx");
 			return ;
 		}
+		that.ctx.fillStyle = color ? color:"blue";
 		that.ctx.textAlign = "left";
-		that.ctx.fillStyle = 'blue';
 		that.ctx.fillText(info,x,y);
 	};
 

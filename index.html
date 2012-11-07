@@ -37,31 +37,39 @@
 <body >
 <div id="content">
 <div id="information-panel" >
+<span id="closeLight" class="click-text">关灯</span>
 <span id="information-for-user" >123</span>
 </div>
-<div id="sys-information">
-<div>
+
+<center >
+<div style="width:640px;height:480px;display:block;">
+<canvas id="canvas" width="640" height="480" style="display:block;">你的浏览器不支持HTML5，Your browser didn't support HTML5.</canvas></div>
+<article id="instruction">
+	<ul>
+		<li class="sys-information key-information"> 
+			<span >R</span>(重新开始游戏，不刷新页面),<span>N</span>(取消暂停),<span>P</span>(暂停)
+		</li>
+		<li class="sys-information"> 
+		需要<span >HTML5</span>的支持，请用支持<span>HTML5(FireFox,Chrome,Safari,IE9等浏览器的最新版)</span>
+		</li>
+	<li class="sys-information">
 屏幕宽度: <span class="monitor-width">undefined</span>
 屏幕高度: <span class="monitor-height">undefined</span>
 浏览器名称: <span class="browser">undefined</span>
 浏览器版本: <span class="browser-version">undefined</span>
+</li>
+<li class="sys-information">
+您使用的语言: <span class="Navigator-userLanguage">undefined</span>
+您使用的操作系统: <span class="Navigator-platform">undefined</span>
+</li>
+</ul>
+	
 </div>
-<div>
-自然语言: <span class="Navigator-userLanguage">undefined</span>
-操作系统: <span class="Navigator-platform">undefined</span>
-</div>
-<div>
-</div>
-</div>
-<center>
-<canvas id="canvas" >你的浏览器不支持HTML5，Your browser didn't support HTML5.</canvas>
-<article id="instruction">
-	<ul>
-		<li class="">1. 需要HTML5的支持，请用支持HTML5的浏览器(FireFox,Chrome,Safari,IE9等)</li>
-	</ul>
 </article>
 </center>
 </div>
 <input id="start" type="button" class="onstart" value="Start"  />
+<div id="mask" style="background:#000;position:absolute;left:0;top:0;width:100%;z-index:50;
+opacity:0.95;visibility:hidden;display:block;"></div>
 </body>
 </html>

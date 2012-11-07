@@ -109,11 +109,13 @@ function IndexView() {
 		{		
 			$(PREFIX_ID+clsid_parms.id_mask).css("visibility","visible");
 			$(PREFIX_ID+clsid_parms.id_canvas).css("position","absolute");
-			Log("hidden");
+			$(PREFIX_ID+clsid_parms.id_closeLight).text("开灯");
+			Log("visible");
 		}else{
 			$(PREFIX_ID+ clsid_parms.id_mask).css("visibility","hidden");
 			$(PREFIX_ID+clsid_parms.id_canvas).css("position","relative");	
-			Log("show");
+			$(PREFIX_ID+clsid_parms.id_closeLight).text("关灯");
+			Log("hidden");
 		}
 	}
 }
