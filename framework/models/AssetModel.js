@@ -190,6 +190,7 @@ var AssetModel = {
         Log("LoadAsset start");	
 		for(var i=0;i<AssetModel.resLevel.length;i++)
 		{
+			Log("LoadAsset level "+(i+1));	
 			var tmp = AssetModel.resLevel[i]["bgs"];
 			AssetModel.LoadBgs(tmp);
 			var tmp = AssetModel.resLevel[i]["roles"];

@@ -22,7 +22,7 @@ function GameModel() {
 	this.assetLoadingStatus  = 0;
 	
 	this.level = 0;//游戏关卡
-    this.Loop = function() {
+    this.Update = function() {
 		
 		switch (that.state) {
 		case PRE_INIT:
@@ -50,13 +50,10 @@ function GameModel() {
             }break;
         case GS_RESTART:
             {
-				MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
-				//InputModel.Loop();
-                that.Restart();
+				that.Restart();
             }break;
         case GS_EXIT:
             {
-				//InputModel.Loop();
                 that.Exit();
                 return;
             }break;
@@ -78,7 +75,6 @@ function GameModel() {
 		{
 			that.setRestart();
 		}
-   //     requestAnimFrame(that.Loop);
     };
     //游戏状态
     this.ResLoading = function() {       
@@ -113,7 +109,7 @@ function GameModel() {
 		if(this.assetLoadingStatus  >= 100 )
 		{
 			console.log(AssetModel.resLevel);
-			setTimeout(this.setInit,3000);
+			this.setInit();
 		}
     };
     this.Init = function() {
@@ -125,7 +121,7 @@ function GameModel() {
         Log("游戏愉快!   : )  ",mfgConfig.toUserLevel);
     };
     this.Running = function() {
-		InputModel.Loop();
+		InputModel.Update();
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
         that.drawBG();
 		Log("Running GameModel!");

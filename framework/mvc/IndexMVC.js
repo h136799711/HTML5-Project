@@ -13,7 +13,7 @@ function IndexModel() {
         AssetModel.getResDesc(resConfig.rs1);
 		MFG.gameCtrl = new GameCtrl();
 		MFGEvent.addEvent(mfgEvents.assetLoad,AssetModel.LoadAsset);
-		MFGEvent.addEvent(mfgEvents.start,MFG.gameCtrl.Loop);
+		MFGEvent.addEvent(mfgEvents.start,MFG.gameCtrl.Update);
     };
 	this.destroy = function(){
 		delete MFG.gameCtrl;

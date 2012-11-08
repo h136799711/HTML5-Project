@@ -64,7 +64,6 @@ function Log(info,level) {
 			alert(info);
 		}
 		if(level === mfgConfig.toUserLevel){
-			var cvs = $(PREFIX_ID+clsid_parms.id_canvas);
 			$(PREFIX_ID+clsid_parms.id_information).text(info).fadeOut("slow",function(){
 			$(PREFIX_ID+clsid_parms.id_information).fadeIn("fast");
 			});
