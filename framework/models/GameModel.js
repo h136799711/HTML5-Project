@@ -13,7 +13,7 @@ var GS_RESTART = 0X0005; //重新开始 ,
 var PRE_INIT = 0X0015; //重新开始 , 
 var GS_EXIT = 0XFFFF; //退出游戏，关闭页面
 function GameModel() {
-    this.ctx=null;
+    this.ctx=undefined;
 	this.screenWidth =720;
 	this.screenHeight = 540;
     var that = this;
@@ -52,15 +52,15 @@ function GameModel() {
             Log("not expected state.");
             break;
         }
-		if(GetKeyState(KEYS[p]))
+		if(GetKeyState(KEYS.p))
 		{
 			that.setPausing();
 		}
-		if(GetKeyState(KEYS[n]))
+		if(GetKeyState(KEYS.n))
 		{
 			that.setRunning();
 		}	
-		if(GetKeyState(KEYS[r]))
+		if(GetKeyState(KEYS.r))
 		{
 			that.setRestart();
 		}
