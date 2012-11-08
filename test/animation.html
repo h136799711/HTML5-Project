@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>标题名</title>
+<meta charset="utf-8">
+<meta name="author" content="hebidu">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="generator" content="EditPlus">
+<meta name="revised" content="hebidu @2012-10-31">
+<script type="text/javascript">
+
+window.requestAnimFrame = (function() {
+    var fps = 33;
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+    function(callback, element) {
+        window.setTimeout(callback, fps);
+    };
+})();
+var IAnimatable = (function(){
+	var animate = function(){};
+	return {
+		animate:animate
+	};
+})();
+var Implement = function(cls,inter){
+	  for(var fn in inter)
+	  {
+		 // console.log(fn);
+		  if(typeof inter[fn] === "function"){
+			cls[fn] = inter[fn];
+		  }
+	  }
+	  //console.log(cls);
+};
+
+var Animation = (function() {
+    var _fns = [];
+    var add = function(key, fn) {
+        _fns[key] = fn;
+    };
+    var remove = function(key) {
+        delete _fns[key];
+    };
+    var Loop = function() {
+		var del_fns = [];
+		var fn;
+        for (fn in _fns) {
+             console.log( _fns[fn]);
+             if(_fns[fn].animate()){
+				del_fns.push(fn);
+			 }
+        }
+		for(fn in del_fns){
+			delete _fns[fn];
+		}
+    };
+    return {
+        add: add,
+        remove: remove,
+        Loop: Loop
+    }
+
+})();
+
+	var rotate = (function(){
+		var ctx = null;
+		var start_angle = 0,end_angle = 90,curframe = 0,
+		totalframes=30,	centerX = 0,	centerY  = 0;
+
+		return {
+		ctx:ctx,
+		start_angle : start_angle,
+		end_angle : end_angle,
+		curframe : curframe,
+		totalframes : totalframes,
+		centerX : centerX,
+		centerY : centerY,
+		id:"Rotate"
+		}
+	})();
+
+
+function load(){
+	var PI = 3.1415926;
+	Implement(rotate,IAnimatable);
+	var canvas = document.getElementById("canvas");
+	var g_ctx = canvas.getContext("2d");
+	rotate.ctx = g_ctx;
+	rotate.end_angle = 270;
+	rotate.totalframes = 1000;
+	rotate.centerX = canvas.width / 2;
+	rotate.centerY = canvas.height/2;
+	rotate.animate = function (){
+	  if(this.curframe > this.totalframes)
+	  {			
+		   return true;
+	  }
+	  this.ctx.clearRect(0,0,640,480);
+	  this.ctx.save();
+	  this.ctx.translate(this.centerX,this.centerY);
+	  var rot_ang = (this.curframe/this.totalframes)*(this.end_angle - this.start_angle) + this.start_angle;
+	  this.ctx.rotate(rot_ang*PI/180);
+	  this.ctx.drawImage(img,-this.centerX,-this.centerY,640,480);
+	  this.ctx.restore();
+	  this.curframe++;
+	  return false;
+	};
+	Animation.add(rotate.id,rotate);
+	var img = new Image();
+	img.onload = function(){
+		(function loop() {
+			Animation.Loop();
+			//console.log("llo");
+			requestAnimFrame(loop);
+		})();
+	}
+//	img.src= "../asset/images/g/loading.jpg";
+	img.src= "http://www.hebidu.cn/html5/asset/images/g/loading.jpg";
+};
+
+window.addEventListener("load",load,true);
+</script>
+<style type="text/css">
+canvas{
+border:1px solid;
+    background-color:#ddf;
+}​
+</style>
+<!--[if lt ie 9]>
+<script src="js/utils/html5shiv.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+<body >
+<div id="container">
+<canvas id="canvas" width=640 height=480>Your browser not support HTML5. </canvas>
+</div>​
+</body>
+</html>
