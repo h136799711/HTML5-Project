@@ -13,7 +13,7 @@ var GS_RESTART = 0X0005; //重新开始 ,
 var PRE_INIT = 0X0015; //重新开始 , 
 var GS_EXIT = 0XFFFF; //退出游戏，关闭页面
 function GameModel() {
-    this.ctx;
+    this.ctx=null;
 	this.screenWidth =720;
 	this.screenHeight = 540;
     var that = this;
@@ -25,53 +25,42 @@ function GameModel() {
     this.Update = function() {
 		
 		switch (that.state) {
-		case PRE_INIT:
-			{
-				MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
-				that.setResLoading();
-			}break;
+		case PRE_INIT:		
+			MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
+			that.setResLoading();
+			break;
         case GS_RES_LOADING:
-            {							
-                that.ResLoading();
-            }break;
+            that.ResLoading();
+            break;
         case GS_PAUSING:
-            {
-                that.Pausing();
-            }break;
+            that.Pausing();
+            break;
         case GS_INIT:
-            {
-
-				MFGEvent.removeEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
-                that.Init();
-            }break;
+            MFGEvent.removeEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
+            that.Init();
+            break;
         case GS_RUNNING:
-            {
-                that.Running();
-            }break;
+            that.Running();
+            break;
         case GS_RESTART:
-            {
-				that.Restart();
-            }break;
+            that.Restart();
+            break;
         case GS_EXIT:
-            {
-                that.Exit();
-                return;
-            }break;
+            that.Exit();
+            return;
         default:
-            {
-                Log("not expected state.");
-                break;
-            }
+            Log("not expected state.");
+            break;
         }
-		if(GetKeyState(KEYS['p']))
+		if(GetKeyState(KEYS[p]))
 		{
 			that.setPausing();
 		}
-		if(GetKeyState(KEYS['n']))
+		if(GetKeyState(KEYS[n]))
 		{
 			that.setRunning();
 		}	
-		if(GetKeyState(KEYS['r']))
+		if(GetKeyState(KEYS[r]))
 		{
 			that.setRestart();
 		}
@@ -157,12 +146,12 @@ function GameModel() {
 	};
 
 	this.setAssetLoadingStatus= function(ev){
-		that.assetLoadingStatus = parseInt(100*ev.args.loaded / ev.args.totalLoad);
+		that.assetLoadingStatus = parseInt(((100*ev.args.loaded) / ev.args.totalLoad),10);
 	};
 	
 	this.drawBG = function(){
         that.ctx.drawImage(AssetModel.getBg(0,0), 0, 0,this.screenWidth,this.screenHeight);
-	}
+	};
 
 
 
@@ -199,7 +188,7 @@ function GameModel() {
     this.setExit = function() {
         that.setGameState(GS_EXIT);
     };
-};
+}
 
 
 //////////////////////////////////////////////////////////////////////​​

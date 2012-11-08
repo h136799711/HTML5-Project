@@ -151,4 +151,58 @@ var MFGEvent = {
     }
 };
 **/
-//​​
+//动画，放在一个游戏循环之中，
+//添加进的对象必须包含animate函数才行
+var Animation = (function() {
+    var _fns = [];
+    var add = function(key, obj) {
+        _fns[key] = obj;
+    };
+    var remove = function(key) {
+        delete _fns[key];
+    };
+    var Update = function() {
+        var del_fns = [];
+        var obj;
+        for (obj in _fns) 
+        {
+            if((typeof _fns[obj].animate !== "undefined") && (_fns[obj].animate()))
+            {
+                del_fns.push(obj);
+            }
+        }
+        for(obj in del_fns){
+            if(typeof _fns[obj] !== "undefined"){
+                delete _fns[obj];
+            }
+        }
+    };
+    return {
+        add: add,
+        remove: remove,
+        Update: Update
+    };
+
+})();
+//旋转效果所需的参数定义
+var rotate = (function() {
+    var ctx = null;
+    var start_angle = 0,//开始角度
+        end_angle = 90,//终止角度
+        curframe = 0,//当前帧
+        totalframes = 30,//总帧，从开始角度到终止角度经过的帧数
+        centerX = 0,//旋转中心X
+        centerY = 0;//旋转中心Y
+
+    return {
+        ctx: ctx,
+        start_angle: start_angle,
+        end_angle: end_angle,
+        curframe: curframe,
+        totalframes: totalframes,
+        centerX: centerX,
+        centerY: centerY,
+        id: "Rotate"
+    };
+})();
+//

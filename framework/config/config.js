@@ -2,7 +2,6 @@
 //@author : hebidu 
 //@Last Modify : 2012-11-3 11:28
 //@Comments: 期望为全局配置文件。
-
 PREFIX_CLS = ".";
 PREFIX_ID = "#";
 var mfgConfig = {
@@ -49,7 +48,7 @@ var mfgEvents = {//程序中自定义的事件
 	assetLoad:"assetLoad",//开始载入资源
 	assetLoading:"assetLoading",//开始载入资源
 
-	start:"start",//开始游戏,游戏循环开始，但是资源未必载入成功
+	start:"start"//开始游戏,游戏循环开始，但是资源未必载入成功
 	
 };
 //返回资源的完整路径，第二个参数期望为mfgConfig.bLoadFromLocal.不应该赋其他值

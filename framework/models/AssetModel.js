@@ -44,40 +44,40 @@ var AssetModel = {
 //        Log("数据转为JSON后: "+JSON.stringify(data));
 		this.isReadyToLoad = true;
 		Log(data);
-		for(var i=0;i<data .length;i++)
+		var i,j;
+		for( i=0;i<data .length;i++)
 		{
-			var objtmp =  new Object();
-			var j;
-			var tmp = data[i]["res"]["bgs"];
+			var objtmp =  {};
+			var tmp = data[i].res.bgs;
 			Log("背景资源数目:"+tmp.length);
-			objtmp["bgs"] = [];
+			objtmp.bgs = [];
 		//	objtmp["bgs"].push(0);//标记已载入资源数目
 			this.totalLoad += tmp.length;
 			for( j=0;j<tmp.length;j++)
 			{
 				console.log(tmp[j]);
-				objtmp["bgs"].push({bg_url:tmp[j],bg_img:null});
+				objtmp.bgs.push({bg_url:tmp[j],bg_img:null});
 			}
-			tmp = data[i]["res"]["roles"];
+			tmp = data[i].res.roles;
 			Log("角色资源数目:"+tmp.length);			
-			objtmp["roles"] = [];
+			objtmp.roles = [];
 		//	objtmp["roles"].push(0);//标记已载入资源数目
 			this.totalLoad += tmp.length;
 			for( j=tmp.length-1;j>=0;j--)
 			{
 				console.log(tmp[j]);
-				objtmp["roles"].push({role_url:tmp[j],role_img:null});
+				objtmp.roles.push({role_url:tmp[j],role_img:null});
 				
 			}
-			tmp = data[i]["res"]["skills"];
+			tmp = data[i].res.skills;
 			Log("技能资源数目:"+tmp.length);	
-			objtmp["skills"] = [];
+			objtmp.skills = [];
 		//	objtmp["skills"].push(0);//标记已载入资源数目
 			this.totalLoad += tmp.length;
 			for( j=tmp.length-1;j>=0;j--)
 			{
 				console.log(tmp[j]);
-				objtmp["skills"].push({skill_name:tmp[j].name,skill_url:tmp[j].url,skill_img:null});
+				objtmp.skills.push({skill_name:tmp[j].name,skill_url:tmp[j].url,skill_img:null});
 			}
 			/*
 			tmp = data[i]["res"]["musics"];
@@ -99,8 +99,9 @@ var AssetModel = {
     },
     //获得资源描述字符串
     getResDesc: function(resWhich) {
-		if(this.isReadyToLoad) return ;//已经准备好了直接返回，
-		
+		if(this.isReadyToLoad) {
+			return ;//已经准备好了直接返回，
+		}
 		var resdesc = window.localStorage.getItem("MFG_RES_DESC");
 		if(resdesc && typeof resdesc !="undefined"){
 			//Log(resdesc.toArray());
@@ -148,7 +149,8 @@ var AssetModel = {
 	
     LoadBgs: function(bgs) {
         Log("BgsLoding....");
-		for(var j=0,length = bgs.length ;j<length;j++)
+		var j,length;
+		for(j=0,length = bgs.length ;j<length;j++)
 		{
 				var img = new Image();
 				img.src = getResUrl(resConfig.imgsUrl_relative + bgs[j].bg_url);	
@@ -158,8 +160,8 @@ var AssetModel = {
     },
     LoadRoles: function(roles) {
         Log("rolesLoding....");    
-
-		for(var j=0,length = roles.length ;j<length;j++)
+		var j,length;
+		for(j=0,length = roles.length ;j<length;j++)
 		{
 				var img = new Image();
 				img.src = getResUrl(resConfig.imgsUrl_relative + roles[j].role_url);	
@@ -171,8 +173,8 @@ var AssetModel = {
     },
     LoadSkills: function(skills) {
         Log("skillsLoding....");    
-
-		for(var j=0,length = skills.length ;j<length;j++)
+		var j,length;
+		for(j=0,length = skills.length ;j<length;j++)
 		{
 				var img = new Image();
 				img.src = getResUrl(resConfig.imgsUrl_relative + skills[j].skill_url);	
@@ -188,14 +190,15 @@ var AssetModel = {
     //载入图片资源，比较耗时的
     LoadAsset: function() {
         Log("LoadAsset start");	
-		for(var i=0;i<AssetModel.resLevel.length;i++)
+		var  i;
+		for(i=0;i<AssetModel.resLevel.length;i++)
 		{
 			Log("LoadAsset level "+(i+1));	
-			var tmp = AssetModel.resLevel[i]["bgs"];
+			var tmp = AssetModel.resLevel[i].bgs;
 			AssetModel.LoadBgs(tmp);
-			var tmp = AssetModel.resLevel[i]["roles"];
+			tmp = AssetModel.resLevel[i].roles;
 			AssetModel.LoadRoles(tmp);
-			var tmp = AssetModel.resLevel[i]["skills"];
+			tmp = AssetModel.resLevel[i].skills;
 			AssetModel.LoadSkills(tmp);
 			AssetModel.LoadMusic(tmp);
 		}
@@ -226,11 +229,11 @@ var AssetModel = {
 	},
 	/*根据关数，背景下标获得背景图片*/
 	getBg:function(level,index){
-		return this.resLevel[level]["bgs"][index].bg_img;
+		return this.resLevel[level].bgs[index].bg_img;
 	},
 	/*根据关数，技能名字获得技能图片*/
 	getSkill:function(level,skill_name){
-			this.resLevel[level]["skills"]
+			//this.resLevel[level]["skills"]
 	},
 	/*根据关数，角色对象获得角色图片 (未定)*/
 	getRole:function(level,role){

@@ -103,7 +103,7 @@ function IndexView() {
 	this.destory = function(){
 		this.unbindEventHandler();
         $(PREFIX_ID + clsid_parms.id_start).show();
-	},
+	};
 	this.toggleLight = function(){
 		if($(PREFIX_ID+ clsid_parms.id_mask).css("visibility") == "hidden")
 		{		
@@ -117,7 +117,7 @@ function IndexView() {
 			$(PREFIX_ID+clsid_parms.id_closeLight).text("关灯");
 			Log("hidden");
 		}
-	}
+	};
 }
 IndexView.prototype = new BaseView();
 //​​
@@ -147,8 +147,9 @@ IndexView.prototype = new BaseView();
 				if (typeof(window.MFG) === undefined) {
 					return;
 				}
-				if(AssetModel.isReadyToLoad)
+				if(AssetModel.isReadyToLoad){
 					this.bindEventHandler();
+				}
 				else{
 					MFGEvent.addEvent(mfgEvents.resDescReady,this.bindEventHandler);
 				}
