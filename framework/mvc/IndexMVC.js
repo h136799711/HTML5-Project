@@ -13,13 +13,13 @@ function IndexModel() {
         AssetModel.getResDesc(resConfig.rs1);
 		MFG.gameCtrl = new GameCtrl();
 		MFGEvent.addEvent(mfgEvents.assetLoad,AssetModel.LoadAsset);
-		MFGEvent.addEvent(mfgEvents.start,MFG.gameCtrl.Update);
+		MFGEvent.addEvent(mfgEvents.start,MFG.gameCtrl.update);
     };
 	this.destroy = function(){
 		delete MFG.gameCtrl;
 		this.unbindEventHandler();
 		MFGEvent.removeEvent(mfgEvents.assetLoad,AssetModel.LoadAsset);
-		MFGEvent.removeEvent(mfgEvents.start,MFG.gameCtrl.Loop);
+		MFGEvent.removeEvent(mfgEvents.start,MFG.gameCtrl.update);
 	};
 	//点击开始按钮时触发
     this.onstart = function(eve) {

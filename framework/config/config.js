@@ -5,13 +5,14 @@
 PREFIX_CLS = ".";
 PREFIX_ID = "#";
 var mfgConfig = {
-		bLoadFromLocal:false,//是否从本地载入资源，在AssetModel中会对其进行赋值
+		bLoadFromLocal:true,//是否从本地载入资源，在AssetModel中会对其进行赋值
         isDebug: true,
         screenWidth: 640,
         screenHeight: 480,
         remoteBaseUrl: "http://www.hebidu.cn/html5/",
         localBaseUrl: "http://127.0.0.1:8080/HTML5-Project/",
-        logLevel: 5,//记录开发用
+        
+		logLevel: 5,//记录开发用
         alertLevel: 4,//警告，使用alert方法显示文字
         toUserLevel: 3,//给予用户看
         deadLevel: 1,//直接退出，会记录以console.log方式
@@ -55,7 +56,7 @@ var mfgEvents = {//程序中自定义的事件
 //根据第二个参数为true则返回本地路劲，
 //
 function getResUrl(resWhich,b){
-    return navigator.onLine ? (b?mfgConfig.localBaseUrl + resConfig.resUrl_relative + resWhich: mfgConfig.remoteBaseUrl + resConfig.resUrl_relative + resWhich) : mfgConfig.localBaseUrl + resConfig.resUrl_relative + resWhich;  
+    return navigator.onLine ? (b?resConfig.resUrl_relative + resWhich:  resConfig.resUrl_relative + resWhich) : resConfig.resUrl_relative + resWhich;  
 }
 function Log(info,level) {
     if (level  !== undefined){

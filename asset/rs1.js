@@ -1,7 +1,7 @@
 var MFG_RES_DESC= [
     {res:{//资源1
-        bgs:["g/loading.jpg","bgtest.jpg"],//背景图片
-        roles:["RYU1/RYU1_crouch.gif","RYU1/RYU1_wait.gif"],//角色图片
+        bgs:["g/loading.jpg","g/front.gif"],//这个比较特殊第一张是载入图片，背景图片
+        roles:["RYU1/RYU1_wait.gif","RYU1/RYU1_goForward.gif"],//角色图片
         skills:[
             {
                  name:"s_001",
@@ -15,7 +15,7 @@ var MFG_RES_DESC= [
          }},
     {res:{//资源2
         bgs:["g/behind.gif"],        
-        roles:["RYU2/RYU2_after_impact_boxing.gif","RYU2/RYU2_after_whirl_kick.gif"],//角色图片
+        roles:["RYU2/RYU2_after_impact_boxing.gif","RYU2/RYU2_crouch.gif"],//角色图片
          skills:[
             {
                  name:"s_003",

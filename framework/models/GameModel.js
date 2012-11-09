@@ -20,9 +20,12 @@ function GameModel() {
     this.state = PRE_INIT;
 	//背景，角色，技能，音效的载入进度
 	this.assetLoadingStatus  = 0;
-	
+	this.rolesCtrl = [];
 	this.level = 0;//游戏关卡
-    this.Update = function() {
+	this.getGroundY = function(){
+		return that.screenHeight - 25;
+	};
+    this.update = function() {
 		
 		switch (that.state) {
 		case PRE_INIT:		
@@ -90,11 +93,12 @@ function GameModel() {
             return;
         }
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
-
+        that.ctx.drawImage(AssetGetter.getBg(that.level,0), 0, 0,this.screenWidth,this.screenHeight);
+		
 		that.ctx.font ="20pt 宋体";
 		that.Write("资源载入中...."+that.assetLoadingStatus+"%.",10,24,"#5d7");
-		
-	   Log("RES_LOADING GameModel!");
+
+	   Log("正在载入资源中...请等待!",mfgConfig.toUserLevel);
 		if(this.assetLoadingStatus  >= 100 )
 		{
 			console.log(AssetModel.resLevel);
@@ -103,16 +107,18 @@ function GameModel() {
     };
     this.Init = function() {
 		console.log("Init");
+		that.InitRoles();
 		InputModel.Init();
-		InputModel.bindEventListener();
+		InputModel.bindEventListener();		
 		that.setRunning();
         Log("Init GameModel!");
         Log("游戏愉快!   : )  ",mfgConfig.toUserLevel);
     };
-    this.Running = function() {
-		InputModel.Update();
+	this.Running = function() {
+		InputModel.update();
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
         that.drawBG();
+		that.drawRoles();
 		Log("Running GameModel!");
 	
     };
@@ -135,6 +141,8 @@ function GameModel() {
         Log("Exit GameModel!");
 		
     };
+
+	
 	this.Write = function(info,x,y,color){
 		if(typeof(that.ctx) === "undefined") {
 			//Log("还未定义ctx");
@@ -144,25 +152,42 @@ function GameModel() {
 		that.ctx.textAlign = "left";
 		that.ctx.fillText(info,x,y);
 	};
+	this.drawBG = function(){
+		 that.ctx.drawImage(AssetGetter.getBg(that.level,1), 0, 0,this.screenWidth,this.screenHeight);
+	};
+	//绘制角色
+	this.drawRoles = function(){
+		var i;
+		for(i=that.rolesCtrl[that.level].length-1;i>=0;i--)
+		{
+			that.rolesCtrl[that.level][i].getModel().update();
+			that.rolesCtrl[that.level][i].getModel().draw(that.ctx);
+		}
+	};
 
+	//初始化角色
+	this.InitRoles = function(){
+		that.rolesCtrl = FactoryModel.createRoles();
+		var i;
+		for(i=that.rolesCtrl[that.level].length-1;i>=0;i--)
+		{
+			var mdl = that.rolesCtrl[that.level][i].getModel();
+			mdl.setScale(1.5);
+			mdl.setY(that.getGroundY()-mdl.getScale() * mdl.getHeight());
+		}
+	};
+
+
+
+
+
+
+
+
+	//设置资源载入进度
 	this.setAssetLoadingStatus= function(ev){
 		that.assetLoadingStatus = parseInt(((100*ev.args.loaded) / ev.args.totalLoad),10);
 	};
-	
-	this.drawBG = function(){
-        that.ctx.drawImage(AssetModel.getBg(0,0), 0, 0,this.screenWidth,this.screenHeight);
-	};
-
-
-
-
-
-
-
-
-
-
-
     //设置游戏状态
     this.setGameState = function(state) {
         that.state = state;
