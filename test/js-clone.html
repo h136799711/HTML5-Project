@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>js-OOP-Clone</title>
+<meta charset="utf-8">
+<meta name="author" content="hebidu">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="generator" content="EditPlus">
+<meta name="revised" content="hebidu @2012-10-31">
+<script type="text/javascript">
+function clone (oToBeCloned) {
+  if (oToBeCloned === null || !(oToBeCloned instanceof Object)) { return oToBeCloned; }
+  var oClone, fConstr = oToBeCloned.constructor;
+  switch (fConstr) {
+    case RegExp:
+      oClone = new fConstr(oToBeCloned.source, "g".substr(0, Number(oToBeCloned.global)) + "i".substr(0, Number(oToBeCloned.ignoreCase)) + "m".substr(0, Number(oToBeCloned.multiline)));
+      break;
+    case Date:
+      oClone = new fConstr(oToBeCloned.getTime());
+      break;
+    default:
+      oClone = new fConstr();
+  }
+  for (var sProp in oToBeCloned) { oClone[sProp] = clone(oToBeCloned[sProp]); }
+  return oClone;
+}
+function extend(obj){
+	var subObj = {};
+	subObj.prototype = clone(obj);
+	return subObj;
+}
+
+function test(){
+	var obj = {id:"obj",obj:{id:"obj in obj"}};
+	var cloneObj = clone(obj);
+	console.log(obj);
+	cloneObj.obj.id = "obj in cloneObj";
+	console.log(cloneObj);
+	var subObj1 = extend(obj);
+	var subObj2 = Object.create(obj);
+	subObj2.id = "subObj2";
+	subObj1.id = "subObj1";
+	console.log(subObj1);
+	console.log(subObj2);
+	console.log("==========匿名函数==================");
+	var arr = [];
+	
+}
+var arr2 = [];
+	var obj = (function(){
+			var write = function(info){
+				console.log(info);
+			};
+			return { 
+				write:write
+			};
+	})();
+	function getA(array){
+		array.push(Object.create(obj));
+	}
+	(function te(){
+		getA(arr2);
+		arr2[0].write("string");
+		console.log(Object.getOwnPropertyNames(arr2));
+		//console.log(Object.toSource());
+		console.log(arr2.toSource());
+	})();
+//window.addEventListener("load",test,true);
+</script>
+<!--[if lt ie 9]>
+<script src="js/utils/html5shiv.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+<body>
+</body>
+</html>
