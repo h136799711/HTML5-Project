@@ -12,7 +12,10 @@ var roleConfig = [[{
 	//
       role_name:"RYU1",
 	  key_state_map:{	//按键与状态相对应
-		goForward:["left"]
+		goForward:[
+			39//right key
+			],
+		
 		/*
 		如何对应键：状态
 		*/

@@ -22,6 +22,9 @@ var RoleModel = (function(){
 	var _spriteInfo = { };//包含各种状态	，以及角色的名字，某状态的各信息，
 	
 	/////getter
+	var getKeyStateMap = function(){
+		return _spriteInfo.key_state_map;
+	};
 	var setX = function(x){
 		_x = x;
 	};

@@ -110,3 +110,11 @@
 接下来的任务
 ---
 * 完成使用键盘控制人物。
+* 键盘与状态的解决方案如下：
+<span style="color:blue">
+var keyStateMap = {
+	"39":"goForward",//right右键按下
+	"83,84":"goBack"//st 2键按下
+};
+console.log(keyStateMap[KEYS.s+","+KEYS.t]);
+</span>

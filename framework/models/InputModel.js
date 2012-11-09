@@ -19,6 +19,7 @@ var InputModel = {
 	keyStates : new Array(257),//所有键的状态按下，放开
 	lazyFrames :5,
 	lazyUpKey :[],//延时-在放开按键之后继续假设按着5帧
+	keyDown:[],//所有按下键
 	Init:function(){
 		lazyUpKey = [];
 	},
@@ -49,6 +50,7 @@ var InputModel = {
 	keyDown : function(ev){
 	//	console.log("keydown");
 		InputModel.keyStates[ev.keyCode] = true;
+		keyDown.push(ev.keyCode);
 		if(ev.keyCode < 112 || ev.keyCode > 123){
 			ev.preventDefault();
 		}
