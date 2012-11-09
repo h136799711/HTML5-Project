@@ -1,5 +1,6 @@
-/////
-/*
+/*@require Javscript支持
+* @author hebidu
+* @date 2012-11-9
 * 流程 -
 			1 创建一个RoleModel
 			2 设置spriteInfo(用于信息设置)

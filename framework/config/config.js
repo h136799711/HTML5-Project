@@ -5,8 +5,8 @@
 PREFIX_CLS = ".";
 PREFIX_ID = "#";
 var mfgConfig = {
-		bLoadFromLocal:true,//是否从本地载入资源，在AssetModel中会对其进行赋值
-        isDebug: true,
+		bLoadFromLocal:true,//无用，使用相对路径了，
+		isDebug: true,
         screenWidth: 640,
         screenHeight: 480,
         remoteBaseUrl: "http://www.hebidu.cn/html5/",
@@ -40,9 +40,9 @@ var clsid_parms = {
 //资源配置文件
 //资源的相对路径和资源描述符对象的文件名
 var resConfig = {
-	resUrl_relative:"asset/",
-    rs1: "rs1.js",
-	imgsUrl_relative:"images/"
+	resUrl_relative:"asset/",	//所有资源的目录
+    rs1: "rs1.js",//资源描述
+	imgsUrl_relative:"images/"//所有图片资源的目录
 };
 var mfgEvents = {//程序中自定义的事件
 	resDescReady:"resDescReady",//准备好资源描述字符串

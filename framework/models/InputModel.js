@@ -1,4 +1,4 @@
-/*
+/* @require document
  * @author hebidu
  * @lastdate 2012-11-5
  *  @description 输入

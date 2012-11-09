@@ -113,24 +113,4 @@ if (!Object.create) {
         return new F();
     };
 }
-function ObjClone (oToBeCloned) {
-  if (oToBeCloned === null || !(oToBeCloned instanceof Object)) { return oToBeCloned; }
-  var oClone, fConstr = oToBeCloned.constructor;
-  switch (fConstr) {
-    case RegExp:
-      oClone = new fConstr(oToBeCloned.source, "g".substr(0, Number(oToBeCloned.global)) + "i".substr(0, Number(oToBeCloned.ignoreCase)) + "m".substr(0, Number(oToBeCloned.multiline)));
-      break;
-    case Date:
-      oClone = new fConstr(oToBeCloned.getTime());
-      break;
-    default:
-      oClone = new fConstr();
-  }
-  for (var sProp in oToBeCloned) { oClone[sProp] = ObjClone(oToBeCloned[sProp]); }
-  return oClone;
-}
-function ObjCreate(obj){
-		var subObj = {};
-		subObj.prototype = ObjClone(obj);
-		return subObj;
-}
+

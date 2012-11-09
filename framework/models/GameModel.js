@@ -1,4 +1,4 @@
-/** @Dependent : 依赖
+/** @require MFGEvent,GetKeyState,KEYS,InputModel,Log,
  *   @author :hebidu
  *   @Last Modify Date : 2012-11-3
  *   @Comment : 注释说明

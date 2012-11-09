@@ -108,49 +108,7 @@ var MFGEvent = (function() {
         fireEvent: fireEvent
     };
 })();
-/*
-var MFGEvent = {
-    _listeners: [],
-    //添加事件
-    addEvent: function(type, fn) {
-        if (typeof this._listeners[type] === "undefined") {
-            this._listeners[type] = [];
-        }
-        if (typeof fn === "function") {
-            this._listeners[type].push(fn);
-        }
-        return this;
-    },
-    //触发事件
-    fireEvent: function(type,args) {
-        var arrayEvent = this._listeners[type];
-        if (arrayEvent instanceof Array) {
-            for (var i = arrayEvent.length - 1; i >= 0; i -= 1) {
-                if (typeof arrayEvent[i] === "function") {
-                    arrayEvent[i]({
-                        type: type,
-						args:args
-                    });
-                }
-            }
-        }
-    },
-    removeEvent: function(type, fn) {
-        var arrayEvent = this._listeners[type];
-        if (typeof type === "string" && arrayEvent instanceof Array) {
-            for (var i = arrayEvent.length - 1; i >= 0; i -= 1) {
-                if (arrayEvent[i] === fn) {
-                    this._listeners[type].splice(i, 1);
-                    break;
-                }
-            }
-        } else {
-            delete this._listeners[type];
-        }
-        return this;
-    }
-};
-**/
+//暂时无用
 //动画，放在一个游戏循环之中，
 //添加进的对象必须包含animate函数才行
 var Animation = (function() {
@@ -161,7 +119,7 @@ var Animation = (function() {
     var remove = function(key) {
         delete _fns[key];
     };
-    var Update = function() {
+    var update = function() {
         var del_fns = [];
         var obj;
         for (obj in _fns) 
@@ -180,7 +138,7 @@ var Animation = (function() {
     return {
         add: add,
         remove: remove,
-        Update: Update
+        update: update
     };
 
 })();
@@ -195,14 +153,14 @@ var rotate = (function() {
         centerY = 0;//旋转中心Y
 
     return {
-        ctx: ctx,
+        ctx: ctx,//canvas context
         start_angle: start_angle,
         end_angle: end_angle,
-        curframe: curframe,
-        totalframes: totalframes,
-        centerX: centerX,
-        centerY: centerY,
-        id: "Rotate"
+        curframe: curframe,//当前帧
+        totalframes: totalframes,//总帧
+        centerX: centerX,  //旋转中心X
+        centerY: centerY,  //旋转中心Y
+        id: "Rotate"          //效果ID，唯一的名称
     };
 })();
 //

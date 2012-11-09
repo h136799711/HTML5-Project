@@ -1,4 +1,5 @@
-/** @Dependent : 依赖Jquery
+/** @require :Jquery,window.localStorage,getResUrl(config.js),
+*    @require:mfgConfig,MFGEvent
  *   @author :hebidu
  *   @Last Modify Date : 2012-11-3
  *   @Comment : 主要是图片资源、和音乐的管理。
