@@ -1,48 +1,4 @@
-
 /////
-/*
-图片的名称 角色ID-state
-
-id:角色ID，保证唯一。
-nickname:角色名称。
-state:角色状态 ，等待，行走，跑动，上跳，前跳。
-update:更新
-{
-	drawImage(
-}
-spriteInfo:此状态下的图片信息包含
-{
-	总帧数:totalFrame,
-	每帧宽度:frameWidth，高度:frameHeight
-
-	总动画序列ani_seq[
-	第一行"wait":动画序列1(1,2,3,5,7),
-	第二行"":动画序列2
-			]
-			var currFrame = function(curFrame){
-				currFrame++;
-				return 当前动画序列帧
-			}
-}		
- role_stateInfo://第一个状态为默认状态
-     {
-	wait:{
-	width:60,
-	height:92,
-	ani_seq:[0,1,2,3,4,5,6],
-	total_frams:32 //总帧播放完此序列
-      },//end wait state
-    goForward:{
-	width:60,
-	height:92,
-	ani_seq:[0,1,2,3,4,5,6],
-	total_frams:24
-       },//end goForward state
-	 }//end role_stateInfo	   
-
-*/
-
-///
 /*
 * 流程 -
 			1 创建一个RoleModel
@@ -52,14 +8,17 @@ spriteInfo:此状态下的图片信息包含
 			5 draw(ctx)绘制
 			根据当前状态从spriteInfo中获得信息来更新
 			RoleModel信息
-*/
+*/			
 ///
 var RoleModel = (function(){
 	//updateFrame图片变化的频率，表示一个状态
 	//的一张图片持续的帧数
+	//curFrame当前帧指的是此状态下动画序列的某一帧,
+	//_x,_y_scale分别是屏幕坐标和缩放大小，缩放用于调整原图片大小
+	//cur_state的改变将会基于键盘的响应或AI的控制
 	var curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,cur_state = "wait";
 	var img = undefined;//从AssetGetter获得
-	var _spriteInfo = { };//包含各种状态	
+	var _spriteInfo = { };//包含各种状态	，以及角色的名字，某状态的各信息，
 	
 	/////getter
 	var setX = function(x){

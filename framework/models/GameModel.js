@@ -10,7 +10,7 @@ var GS_INIT = 0X0002;
 var GS_RUNNING = 0X0003;
 var GS_PAUSING = 0X0004; //暂停
 var GS_RESTART = 0X0005; //重新开始 , 
-var PRE_INIT = 0X0015; //重新开始 , 
+var PRE_INIT = 0X0015; //预初始 , 
 var GS_EXIT = 0XFFFF; //退出游戏，关闭页面
 function GameModel() {
     this.ctx=undefined;

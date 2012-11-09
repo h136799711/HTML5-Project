@@ -24,8 +24,8 @@ var roleConfig = [[{
 	width:62,
 	height:92,
 	ani_seq:[0,1,2,3,4,5,6],
-	each_frames:5 ,//总帧播放完此序列
-	seq_length:6
+	each_frames:5 ,//每each_frames帧递增,
+	seq_length:6//序列总长度,便于获取，不用每次ani_seq.length
       },//end wait state
     goForward:{
 	desc:"goForward",
@@ -37,8 +37,8 @@ var roleConfig = [[{
        },//end goForward state
 	 }//end role_stateInfo	      
 	}],//end RYU1
-		//END LEVEL 0
-	[]//END LEVEL 1
+		//END LEVEL 0 等级0或者说是关卡0
+	[]//END LEVEL 1  等级1或者说是关卡1，暂时用不到
 ];//end roleConfig
 //创建角色，所有角色。
 var FactoryModel = (function(){
