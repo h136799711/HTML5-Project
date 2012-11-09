@@ -34,7 +34,7 @@ var roleConfig = [[{
 	ani_seq:[0,1,2,3,4,5,6],
 	each_frames:5,
 	seq_length:6
-       },//end goForward state
+       }//end goForward state
 	 }//end role_stateInfo	      
 	}],//end RYU1
 		//END LEVEL 0 等级0或者说是关卡0
