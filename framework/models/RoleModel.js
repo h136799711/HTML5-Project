@@ -11,6 +11,7 @@
 			RoleModel信息
 */			
 ///
+
 var RoleModel = (function(){
 	//updateFrame图片变化的频率，表示一个状态
 	//的一张图片持续的帧数

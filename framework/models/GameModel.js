@@ -18,10 +18,13 @@ function GameModel() {
 	this.screenHeight = 540;
     var that = this;
     this.state = PRE_INIT;
-	//背景，角色，技能，音效的载入进度
+	//背景，角色，技能，音效的总载入进度
 	this.assetLoadingStatus  = 0;
-	this.rolesCtrl = [];
+	this.roles = [];
+	this.roleCtrl = RoleCtrl;
+	this.aiCtrl = AICtrl;
 	this.level = 0;//游戏关卡
+	//地面Y值
 	this.getGroundY = function(){
 		return that.screenHeight - 25;
 	};
@@ -29,6 +32,7 @@ function GameModel() {
 		
 		switch (that.state) {
 		case PRE_INIT:		
+			InputModel.init();
 			MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
 			that.setResLoading();
 			break;
@@ -55,15 +59,15 @@ function GameModel() {
             Log("not expected state.");
             break;
         }
-		if(GetKeyState(KEYS.p))
+		if(InputModel.isKeyDown(KEYS.p))
 		{
 			that.setPausing();
 		}
-		if(GetKeyState(KEYS.n))
+		if(InputModel.isKeyDown(KEYS.n))
 		{
 			that.setRunning();
 		}	
-		if(GetKeyState(KEYS.r))
+		if(InputModel.isKeyDown(KEYS.r))
 		{
 			that.setRestart();
 		}
@@ -108,7 +112,6 @@ function GameModel() {
     this.Init = function() {
 		console.log("Init");
 		that.InitRoles();
-		InputModel.Init();
 		InputModel.bindEventListener();		
 		that.setRunning();
         Log("Init GameModel!");
@@ -123,21 +126,19 @@ function GameModel() {
 	
     };
     this.Pausing = function() {
-		
-		Log("Pausing GameModel!");
-			
-    };
+		Log("Pausing Game!",mfgConfig.toUserLevel);
+	};
     this.Restart = function() {
-		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
-		that.Write("Restart GameModel! ",100,100);
 		InputModel.unbindEventListener();
-        Log("Restart GameModel!");
-		
+		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
+		that.Write("Restart Game! ",100,100);
+        Log("Restart Game!",mfgConfig.toUserLevel);		
 		that.setInit();
+		InputModel.bindEventListener();
     };
     this.Exit = function() {
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
-		that.Write("Exit GameModel! ",100,100);
+		that.Write("Exiting....................! ",100,100);
         Log("Exit GameModel!");
 		
     };
@@ -158,20 +159,22 @@ function GameModel() {
 	//绘制角色
 	this.drawRoles = function(){
 		var i;
-		for(i=that.rolesCtrl[that.level].length-1;i>=0;i--)
+		for(i=that.roles[that.level].length-1;i>=0;i--)
 		{
-			that.rolesCtrl[that.level][i].getModel().update();
-			that.rolesCtrl[that.level][i].getModel().draw(that.ctx);
+			that.roles[that.level][i].update();
+			that.roles[that.level][i].draw(that.ctx);
 		}
 	};
 
 	//初始化角色
 	this.InitRoles = function(){
-		that.rolesCtrl = FactoryModel.createRoles();
+		if(that.roles.length === 0){	
+			that.roles = FactoryModel.createRoles();
+		}
 		var i;
-		for(i=that.rolesCtrl[that.level].length-1;i>=0;i--)
+		for(i=that.roles[that.level].length-1;i>=0;i--)
 		{
-			var mdl = that.rolesCtrl[that.level][i].getModel();
+			var mdl = that.roles[that.level][i];
 			mdl.setScale(1.5);
 			mdl.setY(that.getGroundY()-mdl.getScale() * mdl.getHeight());
 		}
@@ -194,9 +197,6 @@ function GameModel() {
     };
     this.setResLoading = function() {
         that.setGameState(GS_RES_LOADING);
-    };
-    this.setStart = function() {
-        that.setGameState(GS_RUNNING);
     };
     this.setRunning = function() {
         that.setGameState(GS_RUNNING);

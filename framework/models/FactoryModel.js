@@ -21,13 +21,15 @@ var roleConfig = [[{
 		*/
 	  },
       role_stateInfo://第一个状态为默认状态
+	  //总帧50左右良好
      {
 	wait:{
-	desc:"wait",
-	width:62,
+	desc:"goForward",
+	width:66,
 	height:92,
-	ani_seq:[0,1,2,3,4,5,6],
-	each_frames:5 ,//每each_frames帧递增,
+//	ani_seq:[0,5,3,4,4,2],
+	ani_seq:[0,1,2,3,4,5],
+	each_frames:7 ,//每each_frames帧递增,
 	seq_length:6//序列总长度,便于获取，不用每次ani_seq.length
       },//end wait state
     goForward:{
@@ -47,19 +49,17 @@ var roleConfig = [[{
 var FactoryModel = (function(){
 	var createRoles = function(){
 		//for(roleConfig
-		var rolesCtrl = [],i,j;
+		var roles = [],i,j;
 		for(i=0;i<roleConfig.length;i++){
-			var tmp = [],tmpCtrl=[];
+			var tmp = [];
 			for(j=0;j<roleConfig[i].length;j++){
 				tmp.push(Object.create(RoleModel));
 				tmp[j].setSpriteInfo(roleConfig[i][j]);
 				tmp[j].setImg(AssetGetter.getRole(i,tmp[j].getRoleName(),tmp[j].getRoleState()));
-				tmpCtrl.push(Object.create(RoleCtrl));
-				tmpCtrl[j].setModel(tmp[j]);
 			}
-			rolesCtrl.push(tmpCtrl);
+			roles.push(tmp);
 		}
-		return rolesCtrl;
+		return roles;
 	};
 
 	return {
