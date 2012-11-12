@@ -21,13 +21,16 @@ function GameModel() {
 	//背景，角色，技能，音效的总载入进度
 	this.assetLoadingStatus  = 0;
 	this.roles = [];
-	this.roleCtrl = RoleCtrl;
+	this.roleCtrl1 = KeyBoardCtrl;
 	this.aiCtrl = AICtrl;
 	this.level = 0;//游戏关卡
+	this.enemy = 0;
 	//地面Y值
 	this.getGroundY = function(){
 		return that.screenHeight - 25;
 	};
+	this.leftX = 100;
+	this.rightX = 400;
     this.update = function() {
 		
 		switch (that.state) {
@@ -47,7 +50,7 @@ function GameModel() {
             that.Init();
             break;
         case GS_RUNNING:
-            that.Running();
+            that.Running();		    
             break;
         case GS_RESTART:
             that.Restart();
@@ -97,7 +100,7 @@ function GameModel() {
             return;
         }
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);    
-        that.ctx.drawImage(AssetGetter.getBg(that.level,0), 0, 0,this.screenWidth,this.screenHeight);
+        that.ctx.drawImage(AssetGetter.getBg(0), 0, 0,this.screenWidth,this.screenHeight);
 		
 		that.ctx.font ="20pt 宋体";
 		that.Write("资源载入中...."+that.assetLoadingStatus+"%.",10,24,"#5d7");
@@ -105,24 +108,30 @@ function GameModel() {
 	   Log("正在载入资源中...请等待!",mfgConfig.toUserLevel);
 		if(this.assetLoadingStatus  >= 100 )
 		{
-			console.log(AssetModel.resLevel);
 			this.setInit();
 		}
     };
     this.Init = function() {
 		console.log("Init");
 		that.InitRoles();
-		InputModel.bindEventListener();		
+		InputModel.bindEventListener();	
+		that.selectRole();
 		that.setRunning();
         Log("Init GameModel!");
         Log("游戏愉快!   : )  ",mfgConfig.toUserLevel);
     };
 	this.Running = function() {
 		InputModel.update();
+		if(InputModel.isKeyDown(KEY_PLAYER1.right.key)){				
+			KEY_PLAYER1.right.pressNum = 1;
+		}else if(InputModel.isKeyUp(KEY_PLAYER1.right.key)){
+			KEY_PLAYER1.right.pressNum = 0 ;
+		}
+		KEY_PLAYER1.right.pressNum = InputModel.keyPressNum(KEY_PLAYER1.right.key) > 1? InputModel.keyPressNum(KEY_PLAYER1.right.key):KEY_PLAYER1.right.pressNum;
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
         that.drawBG();
 		that.drawRoles();
-		Log("Running GameModel!");
+		//Log("Running GameModel!");
 	
     };
     this.Pausing = function() {
@@ -154,32 +163,41 @@ function GameModel() {
 		that.ctx.fillText(info,x,y);
 	};
 	this.drawBG = function(){
-		 that.ctx.drawImage(AssetGetter.getBg(that.level,1), 0, 0,this.screenWidth,this.screenHeight);
+		 that.ctx.drawImage(AssetGetter.getBg(1), 0, 0,this.screenWidth,this.screenHeight);
 	};
 	//绘制角色
 	this.drawRoles = function(){
-		var i;
-		for(i=that.roles[that.level].length-1;i>=0;i--)
-		{
-			that.roles[that.level][i].update();
-			that.roles[that.level][i].draw(that.ctx);
-		}
+		//var i;
+		that.roleCtrl1.update();
+		that.roleCtrl1.draw(that.ctx);
+		//for(i=that.roles[that.level].length-1;i>=0;i--)
+		//{
+		//	that.roles[that.level][i].update();
+		//	that.roles[that.level][i].draw(that.ctx);
+		//}
 	};
 
 	//初始化角色
 	this.InitRoles = function(){
-		if(that.roles.length === 0){	
-			that.roles = FactoryModel.createRoles();
-		}
+		that.roles = FactoryModel.createRoles();
+		
 		var i;
-		for(i=that.roles[that.level].length-1;i>=0;i--)
+		for(i=that.roles.length-1;i>=0;i--)
 		{
-			var mdl = that.roles[that.level][i];
+			var mdl = that.roles[i];
 			mdl.setScale(1.5);
 			mdl.setY(that.getGroundY()-mdl.getScale() * mdl.getHeight());
 		}
-	};
 
+	};
+	this.selectRole = function(){
+		var select = 0;
+		that.roleCtrl1.setModel(that.roles[select]);
+		that.roleCtrl1.setLeft();
+		that.roleCtrl1.setX(that.leftX);
+		that.roleCtrl1.setInput(InputModel);
+		
+	};
 
 
 

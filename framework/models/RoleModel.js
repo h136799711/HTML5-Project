@@ -18,14 +18,11 @@ var RoleModel = (function(){
 	//curFrame当前帧指的是此状态下动画序列的某一帧,
 	//_x,_y_scale分别是屏幕坐标和缩放大小，缩放用于调整原图片大小
 	//cur_state的改变将会基于键盘的响应或AI的控制
-	var curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,cur_state = "wait";
+	var _curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,cur_state = "wait";
 	var img ;//从AssetGetter获得
 	var _spriteInfo = { };//包含各种状态	，以及角色的名字，某状态的各信息，
-	
+
 	/////getter
-	var getKeyStateMap = function(){
-		return _spriteInfo.key_state_map;
-	};
 	var setX = function(x){
 		_x = x;
 	};
@@ -59,13 +56,21 @@ var RoleModel = (function(){
 	var setSpriteInfo = function(spriteInfo){
 		_spriteInfo = spriteInfo;
 	};
+	var setRoleState = function(state){
+		if(_spriteInfo === undefined || _spriteInfo.role_stateInfo[state] === undefined){
+			return false;
+		}
+		cur_state =  state;		
+		setImg(AssetGetter.getRole(getRoleName(),getRoleState()));
+		return true;
+	};
+
 	var getSeqLength = function(){
 		return _spriteInfo.role_stateInfo[cur_state].seq_length;
 	};
 	var getKeyStateMap = function(){
-		return _spriteInfo.role_stateInfo[cur_state].key_state_map;
+		return _spriteInfo.key_state_map;
 	};
-	
 	var draw = function(ctx){
 		if(typeof _scale === "undefined"){
 			_scale = 1;
@@ -73,15 +78,14 @@ var RoleModel = (function(){
 		if(typeof img === "undefined" || img === null){
 			return false;
 		}
-		ctx.drawImage(img,parseInt(curFrame,10)*getWidth(),0,getWidth(),getHeight(),_x,_y,
+		ctx.drawImage(img,parseInt(_curFrame,10)*getWidth(),0,getWidth(),getHeight(),_x,_y,
 			_scale*getWidth(),(_scale*getHeight()));
 		return true;
 	};
 	var update = function(){
-		curFrame += (1.0 /  getEachFrames());
-		if(curFrame >=  getSeqLength()){
-			curFrame = 0;
-		}
+		_curFrame += (1.0 /  getEachFrames());
+		_curFrame = _curFrame >= getSeqLength()? 0 :_curFrame;
+	//	_curFrame = _curFrame >= getSeqLength()? 0 :_curFrame + (1.0 /  getEachFrames());
 	};
 	return {
 		draw:draw,
@@ -92,10 +96,12 @@ var RoleModel = (function(){
 		getScale:getScale,
 		setImg:setImg,
 		setSpriteInfo:setSpriteInfo,
+		setRoleState:setRoleState,
 		getWidth:getWidth,
 		getHeight:getHeight,
 		getRoleName:getRoleName,
-		getRoleState:getRoleState
+		getRoleState:getRoleState,
+		getKeyStateMap:getKeyStateMap
 	};
 })();
 //需要一个工厂类来创建各类角色
