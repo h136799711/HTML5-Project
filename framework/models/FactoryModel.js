@@ -11,7 +11,7 @@ var FactoryModel = (function(){
 		//for(roleConfig
 		var roles = [],j;
 		for(j=0;j<roleConfig.length;j++){
-			roles.push(Object.create(RoleModel));
+			roles.push(new RoleModel());
 			roles[j].setSpriteInfo(roleConfig[j]);
 			roles[j].setImg(AssetGetter.getRole(roles[j].getRoleName(),roles[j].getRoleState()));
 		}

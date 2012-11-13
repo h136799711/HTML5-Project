@@ -113,4 +113,34 @@ if (!Object.create) {
         return new F();
     };
 }
-
+/////////////////////////////
+//这个效果是 位置与时间的函数关系
+//t是当前时间单位,b是起始位置,c是终点位置-起始位置,d是总共需要多少时间单位
+//时间单位，我准备使用帧做时间单位
+var Tween = (function(){
+    var easeInQuad = function(t,b,c,d){
+        return c * (t /= d) * t + b;
+    };
+    var easeOutQuad= function(t,b,c,d){        
+        return -c * (t /= d) *(t - 2) + b;
+    };
+    var easeInCubic = function (t, b, c, d) {
+        return c * ((t/=d)*t*t) + b;
+    };
+    var easeOutCubic = function (t, b, c, d) {
+        return c * (((t/=d)-1)*(t-1)*(t-1) + 1) + b;
+    };
+    var easeInOutCubic = function (t, b, c, d) {
+        if ((t/=d/2) < 1)
+        return c/2 * (t*t*t) + b;
+        return c/2 * ((t-=2)*t*t + 2) + b;
+    };
+    return {
+        easeInQuad:easeInQuad,
+        easeOutQuad:easeOutQuad,//2次方
+        easeInCubic :easeInCubic, 
+        easeOutCubic:easeOutCubic,
+        easeInOutCubic :easeInOutCubic //3次方
+    };
+})();
+//

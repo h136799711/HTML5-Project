@@ -4,69 +4,118 @@
 ** 2012-11-9
 ** 角色控制器
 */
-var IRoleCtrl = (function(){
+function IRoleCtrl(){
 	var _model ;
-	var _input;
 	var _side=0;
-	var _keyStateMap;
-	var setRight =function (){
-		_side = 1;		
+	this. setRight =function (){
+		_side = 1;	
+		_model.setMirror(true);
 	};
-	var setLeft =function (){
+	this. setLeft =function (){
 		_side = 0;
+		_model.setMirror(false);
 	};
-	var setInput =function (input){
-		_input = input;
-	};
-	var setModel =function (model){
+	this. setModel =function (model){
 		_model = model;
-		_keyStateMap = _model.getKeyStateMap();
 	};
-	var setX = function(x){
+	this. getModel = function(){
+		return _model;
+	};
+	this. setX = function(x){
 		_model.setX(x);
 	};
-	var setY = function(y){
+	this. setY = function(y){
 		_model.setY(y);
 	};
-	var update = function(){
-		var i,state,isActive,cnt=0;
-		for(state in _keyStateMap){
-			if(true){
-				isActive  = false;
-				for(i=0;i<_keyStateMap[state].length;i++){
-					if(KEY_PLAYER1[_keyStateMap[state][i]].pressNum >3){
-						isActive = true;break;
+	this. update = function()
+	{				
+		_model.update();
+	};
+	this.getLoop = function(){
+		return _model.getLoop();
+	};
+	this.setRoleState = function(state){
+		return _model.setRoleState(state);
+	};
+	this.getNextState = function(){
+		return _model.getNextState();
+	};
+	this.isAnimSeqOver = function(){
+		return _model.isAnimSeqOver();
+	};
+	this.draw = function(ctx){
+		if(_model.getMirror()){
+			ctx.save();
+			ctx.translate(_model.getCenterX(),_model.getCenterY());
+			ctx.scale(-1,1);
+			ctx.translate(-_model.getCenterX(),-_model.getCenterY());
+			_model.draw(ctx);
+			ctx.restore();
+		}else{			
+			_model.draw(ctx);
+		}
+	};
+};
+function KeyBoardCtrl(){
+	var _keys,_keysStateMap;
+	this.setKeysStateMap = function(keysStateMap){
+		_keysStateMap = keysStateMap;
+	};
+	this.setKeys = function(keys){
+		_keys = keys;
+	};
+	this.getKeys = function(){
+		return _keys;
+	};
+	this.checkStateCondition = function(state){
+		var obj = _keysStateMap[state],i;
+		for(i=0;i<obj.keys.length;i++)
+		{
+			if(!_keys[obj.keys[i]].isDown()){
+				return false;
+			}
+		}
+		return true;
+	};
+	this.getStateActived = function(){
+		var state,i,isActive;
+		for(state in _keysStateMap){			
+			if(typeof state === "string"){
+				isActive = true;
+
+				for(i=_keysStateMap[state].keys.length-1;i>=0;i--)
+				{
+					if(!_keys[_keysStateMap[state].keys[i]].isDown()){
+						isActive =  false;
 					}
 				}
-				if(isActive)
-				{
-					cnt++;
-					_model.setRoleState(state);
+				if(isActive){
+					return state;
 				}
 			}
 		}
-		if(cnt === 0){
-			_model.setRoleState("wait");
+		
+	};
+	this.update = function(){
+		var state;
+		if(KeyBoardCtrl.prototype.isAnimSeqOver()){
+			state = KeyBoardCtrl.prototype.getNextState();
+			if(this.checkStateCondition(state)){					
+				KeyBoardCtrl.prototype.setRoleState(state);
+			}
+		}else{
+			state = this.getStateActived();
+			if(typeof state !== "undefined" ){
+				KeyBoardCtrl.prototype.setRoleState(state);
+			}else{				
+				KeyBoardCtrl.prototype.setRoleState("wait");
+			}
 		}
-		_model.update();
+		KeyBoardCtrl.prototype.update();
 	};
-	var draw = function(ctx){
-		_model.draw(ctx);
-	};
-	return {
-		update:update,
-		draw:draw,
-		setModel:setModel,
-		setLeft:setLeft,
-		setRight:setRight,
-		setX:setX,
-		setY:setY,
-		setInput:setInput
-	};
-})();
-var KeyBoardCtrl = Object.create(IRoleCtrl);
-
-var AICtrl = Object.create(IRoleCtrl);
+};
+KeyBoardCtrl.prototype = new IRoleCtrl();
+var AICtrl = new IRoleCtrl();
 
 
 /////////////////////////////////////////////////////////

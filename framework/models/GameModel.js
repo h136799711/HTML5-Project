@@ -21,7 +21,7 @@ function GameModel() {
 	//背景，角色，技能，音效的总载入进度
 	this.assetLoadingStatus  = 0;
 	this.roles = [];
-	this.roleCtrl1 = KeyBoardCtrl;
+	this.roleCtrl1 = new KeyBoardCtrl();
 	this.aiCtrl = AICtrl;
 	this.level = 0;//游戏关卡
 	this.enemy = 0;
@@ -29,8 +29,8 @@ function GameModel() {
 	this.getGroundY = function(){
 		return that.screenHeight - 25;
 	};
-	this.leftX = 100;
-	this.rightX = 400;
+	this.leftX = 70;
+	this.rightX = 500;
     this.update = function() {
 		
 		switch (that.state) {
@@ -69,7 +69,7 @@ function GameModel() {
 		if(InputModel.isKeyDown(KEYS.n))
 		{
 			that.setRunning();
-		}	
+		}
 		if(InputModel.isKeyDown(KEYS.r))
 		{
 			that.setRestart();
@@ -122,12 +122,14 @@ function GameModel() {
     };
 	this.Running = function() {
 		InputModel.update();
-		if(InputModel.isKeyDown(KEY_PLAYER1.right.key)){				
-			KEY_PLAYER1.right.pressNum = 1;
-		}else if(InputModel.isKeyUp(KEY_PLAYER1.right.key)){
-			KEY_PLAYER1.right.pressNum = 0 ;
+		if(InputModel.isKeyDown(that.roleCtrl1.getKeys().right.getKey())){
+			that.roleCtrl1.getKeys().right.setDown(true);
+		}else if(InputModel.isKeyUp(that.roleCtrl1.getKeys().right.getKey())){
+			that.roleCtrl1.getKeys().right.setDown(false);
 		}
-		KEY_PLAYER1.right.pressNum = InputModel.keyPressNum(KEY_PLAYER1.right.key) > 1? InputModel.keyPressNum(KEY_PLAYER1.right.key):KEY_PLAYER1.right.pressNum;
+		that.roleCtrl1.getKeys().press = InputModel.getKeyPress2(KEY_PLAYER1.right.getKey());
+		
+		
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
         that.drawBG();
 		that.drawRoles();
@@ -170,6 +172,8 @@ function GameModel() {
 		//var i;
 		that.roleCtrl1.update();
 		that.roleCtrl1.draw(that.ctx);
+		that.aiCtrl.update();
+		that.aiCtrl.draw(that.ctx);
 		//for(i=that.roles[that.level].length-1;i>=0;i--)
 		//{
 		//	that.roles[that.level][i].update();
@@ -192,11 +196,15 @@ function GameModel() {
 	};
 	this.selectRole = function(){
 		var select = 0;
+		that.roleCtrl1.setKeys(KEY_PLAYER1);
 		that.roleCtrl1.setModel(that.roles[select]);
+		that.roleCtrl1.setKeysStateMap(that.roles[select].getKeysStateMap());
 		that.roleCtrl1.setLeft();
 		that.roleCtrl1.setX(that.leftX);
-		that.roleCtrl1.setInput(InputModel);
-		
+
+		that.aiCtrl.setModel(that.roles[1]);
+		that.aiCtrl.setRight();
+		that.aiCtrl.setX(that.rightX);
 	};
 
 

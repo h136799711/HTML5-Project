@@ -5,6 +5,7 @@
 //baseview
 
 
+FRAMES_PASSED = 0;//过去多少帧，在GameCtrl中的循环调用中改值
 function BaseView() {
     this.initialize = function() {
         throw new Error("subobject  must  implements the method (initialize)");

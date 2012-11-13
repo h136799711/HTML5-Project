@@ -5,12 +5,11 @@
  */
 function GameCtrl(){
 	this.model = new GameModel();
-	this.view = new GameView();	
-	this.framePassed = 0;
+	this.view = new GameView();
 	var that = this;
     this.update = function() {
 		that.model.update();
-		that.framePassed++;
+		FRAMES_PASSED ++;
 		requestAnimFrame(that.update);
     };
 	this.Write = function(info,x,y){		

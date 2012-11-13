@@ -78,7 +78,8 @@ function Log(info,level) {
     }
 }
  //按键 a-z ,小键盘0-9 ，空格键，上下左右4个方向键
-
+var KEYS_CHAR = [];
+KEYS_CHAR[39] = "right";
 var KEYS = {
     a:65,b:66,c:67,d:68,e:69,f:70,g:71,h:72,i:73,
      j :74, k :75, l :76, m :77, n :78, o :79,p:80,q:81,r:82,
@@ -89,11 +90,23 @@ var KEYS = {
      num_5 :101, num_6 :102,     num_7 :103,     num_8 :104,     num_9 :105
 };
 //player 1
+function PlayKey(key){
+	var _key = key,_press={ cnt:0,time:[] },_isdown=false;
+	this.isDown = function(){		return _isdown === true;	 };
+	this.setDown = function(isdown){	_isdown = isdown;	};
+	this.setPress = function(press){	_press = press;		};
+	this.getKey = function(){	return _key;};
+	this.getPress = function(){	return _press;	};
+	this.getPressCnt = function(){	return _press.cnt;};
+	this.getPressTime = function(){	return _press.time;};
+};
 var KEY_PLAYER1 = [];
-KEY_PLAYER1.up  = {key:KEYS.w,pressNum:0,pressTime:0};
-KEY_PLAYER1.down  = {key:KEYS.s,pressNum:0,pressTime:0};
-KEY_PLAYER1.left  = {key:KEYS.a,pressNum:0,pressTime:0};
-KEY_PLAYER1.right  = {key:KEYS.d,pressNum:0,pressTime:0};
+KEY_PLAYER1.up  = new PlayKey(KEYS.w);
+KEY_PLAYER1.down  = new PlayKey(KEYS.s);
+KEY_PLAYER1.left  = new PlayKey(KEYS.a);
+KEY_PLAYER1.right  = new PlayKey(KEYS.d);
+KEY_PLAYER1.lightKick  = new PlayKey(KEYS.j);
+
 //player 2
 
 //如何创建角色
@@ -103,10 +116,15 @@ var roleConfig = [{
     //
       role_name:"RYU1",
       key_state_map:{    //按键与状态相对应
-        goForward:[
-            "right"//right key
-            ]
-        
+		
+			goForward:{
+				keys:["right","right"],
+				nextstate:"wait"
+			},
+			wait:{
+				keys:[],
+				nextstate:"wait"
+			}
         /*
         如何对应键：状态
         */
@@ -120,25 +138,66 @@ var roleConfig = [{
     height:92,
 //    ani_seq:[0,5,3,4,4,2],
     ani_seq:[0,1,2,3,4,5],
-    each_frames:17 ,//每each_frames帧递增,
-    seq_length:6//序列总长度,便于获取，不用每次ani_seq.length
-      },//end wait state
+    each_frames:10 ,//每each_frames帧递增,
+    seq_length:6,//序列总长度,便于获取，不用每次ani_seq.length
+     loop:1//循环次数
+	  },//end wait state
     goForward:{
     desc:"goForward",
     width:66,
     height:92,
     ani_seq:[0,1,2,3,4,5],
     each_frames:6,
-    seq_length:6
+    seq_length:6,
+	loop:1
        }//end goForward state
      }//end role_stateInfo          
     },//end RYU1  
+	{
+      role_name : "RYU2",
+      key_state_map:{    //按键与状态相对应
+			goForward:{
+				keys:["right","right"],
+				nextstate:"goForward"
+			},
+			wait:{
+				keys:[],
+				nextstate:"wait"
+			}
+        /*
+        如何对应键：状态
+        */
+      },
+      role_stateInfo://第一个状态为默认状态
+      //总帧50左右良好
+     {
+    wait:{
+    desc:"wait",
+    width:62,
+    height:92,
+//    ani_seq:[0,5,3,4,4,2],
+    ani_seq:[0,1,2,3,4,5],
+    each_frames:10 ,//每each_frames帧递增,
+    seq_length:6,//序列总长度,便于获取，不用每次ani_seq.length
+    loop:1
+	  },//end wait state
+    goForward:{
+    desc:"goForward",
+    width:66,
+    height:92,
+    ani_seq:[0,1,2,3,4,5],
+    each_frames:10,
+    seq_length:6,
+	loop:1    
+	}//end goForward state
+     }//end role_stateInfo          
+    }//end RYU2 
 ];//end roleConfig
 $ = window.$;
 var MFG_RES_DESC= [
 		{
         bgs:["g/loading.jpg","g/front.gif"],//这个比较特殊第一张是载入图片，背景图片
-        roles:["RYU1/RYU1_wait.gif","RYU1/RYU1_goForward.gif"],//角色图片
+        roles:["RYU1/RYU1_wait.gif","RYU1/RYU1_goForward.gif","RYU2/RYU2_wait.gif","RYU2/RYU2_goForward.gif"],//角色图片
         skills:[
             {
                  name:"s_001",
