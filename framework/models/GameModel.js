@@ -18,6 +18,7 @@ function GameModel() {
 	this.screenHeight = 540;
     var that = this;
     this.state = PRE_INIT;
+	var framepassed = 0,start_update_time=0,fps=60;
 	//背景，角色，技能，音效的总载入进度
 	this.assetLoadingStatus  = 0;
 	this.roles = [];
@@ -31,10 +32,14 @@ function GameModel() {
 	};
 	this.leftX = 70;
 	this.rightX = 500;
-    this.update = function() {
-		
+    this.update = function() {		
+		if(Date.now() - start_update_time >= 1000){		
+			fps = FRAMES_PASSED - framepassed;
+			framepassed = FRAMES_PASSED;
+			start_update_time = Date.now();
+		}
 		switch (that.state) {
-		case PRE_INIT:		
+		case PRE_INIT:
 			InputModel.init();
 			MFGEvent.addEvent(mfgEvents.assetLoading,that.setAssetLoadingStatus);
 			that.setResLoading();
@@ -74,6 +79,7 @@ function GameModel() {
 		{
 			that.setRestart();
 		}
+		that.Write("FPS: "+fps,520,30,"#f08080");
     };
     //游戏状态
     this.ResLoading = function() {       
@@ -104,8 +110,8 @@ function GameModel() {
 		
 		that.ctx.font ="20pt 宋体";
 		that.Write("资源载入中...."+that.assetLoadingStatus+"%.",10,24,"#5d7");
-
-	   Log("正在载入资源中...请等待!",mfgConfig.toUserLevel);
+		
+	    Log("正在载入资源中...请等待!",mfgConfig.toUserLevel);
 		if(this.assetLoadingStatus  >= 100 )
 		{
 			this.setInit();
@@ -122,19 +128,12 @@ function GameModel() {
     };
 	this.Running = function() {
 		InputModel.update();
-		if(InputModel.isKeyDown(that.roleCtrl1.getKeys().right.getKey())){
-			that.roleCtrl1.getKeys().right.setDown(true);
-		}else if(InputModel.isKeyUp(that.roleCtrl1.getKeys().right.getKey())){
-			that.roleCtrl1.getKeys().right.setDown(false);
-		}
-		that.roleCtrl1.getKeys().press = InputModel.getKeyPress2(KEY_PLAYER1.right.getKey());
 		
 		
 		that.ctx.clearRect(0, 0, that.screenWidth,that.screenHeight);        
         that.drawBG();
 		that.drawRoles();
-		//Log("Running GameModel!");
-	
+		//Log("Running GameModel!");		
     };
     this.Pausing = function() {
 		Log("Pausing Game!",mfgConfig.toUserLevel);
@@ -155,13 +154,15 @@ function GameModel() {
     };
 
 	
-	this.Write = function(info,x,y,color){
+	this.Write = function(info,x,y,color,bgColor){
 		if(typeof(that.ctx) === "undefined") {
 			//Log("还未定义ctx");
 			return ;
 		}
-		that.ctx.fillStyle = color ? color:"blue";
 		that.ctx.textAlign = "left";
+		that.ctx.fillStyle = bgColor = bgColor === undefined ? "#ffffff" : bgColor;
+		that.ctx.fillRect(x,y-20,that.ctx.measureText(info).width,25);
+		that.ctx.fillStyle = color ? color:"blue";
 		that.ctx.fillText(info,x,y);
 	};
 	this.drawBG = function(){
@@ -171,8 +172,8 @@ function GameModel() {
 	this.drawRoles = function(){
 		//var i;
 		that.roleCtrl1.update();
-		that.roleCtrl1.draw(that.ctx);
 		that.aiCtrl.update();
+		that.roleCtrl1.draw(that.ctx);
 		that.aiCtrl.draw(that.ctx);
 		//for(i=that.roles[that.level].length-1;i>=0;i--)
 		//{
@@ -190,7 +191,7 @@ function GameModel() {
 		{
 			var mdl = that.roles[i];
 			mdl.setScale(1.5);
-			mdl.setY(that.getGroundY()-mdl.getScale() * mdl.getHeight());
+			mdl.setY(that.getGroundY());
 		}
 
 	};

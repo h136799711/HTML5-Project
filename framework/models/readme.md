@@ -15,7 +15,7 @@
 * 监听键盘事件使用方法 
 <ul>
 <li>InputModel.bindEventListener(),</li>
-<li>InputModel.Update()</li>
+<li>InputModel.update()</li>
 </ul>
 --------------------------------------------
 

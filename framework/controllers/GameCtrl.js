@@ -10,7 +10,8 @@ function GameCtrl(){
     this.update = function() {
 		that.model.update();
 		FRAMES_PASSED ++;
-		requestAnimFrame(that.update);
+		requestAnimFrame(that.update);	
+
     };
 	this.Write = function(info,x,y){		
 		that.model.Write(info,x,y);

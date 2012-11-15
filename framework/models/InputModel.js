@@ -46,6 +46,7 @@ var InputModel = (function(){
 		keyStates[ev.keyCode].press.time[keyStates[ev.keyCode].press.cnt] = FRAMES_PASSED;
 		keyStates[ev.keyCode].press.cnt=keyStates[ev.keyCode].press.cnt < 2 ?keyStates[ev.keyCode].press.cnt+1 : 0 ;
 		keyStates[ev.keyCode].iskeydown = false;
+	//	console.log("keyup");
 		
 		
 	};

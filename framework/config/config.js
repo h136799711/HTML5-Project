@@ -116,13 +116,28 @@ var roleConfig = [{
     //
       role_name:"RYU1",
       key_state_map:{    //按键与状态相对应
-		
+		crouch:{
+				keys:["down"],
+				isDown:[true],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
+				nextstate:"wait"
+			},
+		jumpUp:{
+				keys:["up"],
+				nextstate:"wait"
+			},
+			goBack:{
+				keys:["left"],
+				isDown:[true],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
+				nextstate:"wait"
+			},
 			goForward:{
-				keys:["right","right"],
+				keys:["right"],
+				isDown:[true],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
 				nextstate:"wait"
 			},
 			wait:{
 				keys:[],
+				isDown:[],
 				nextstate:"wait"
 			}
         /*
@@ -149,8 +164,37 @@ var roleConfig = [{
     ani_seq:[0,1,2,3,4,5],
     each_frames:6,
     seq_length:6,
+	loop:1,
+	vx:0.1,
+	vy:0.1
+       },//end goForward state
+	crouch:{
+    desc:"crouch",
+    width:63,
+    height:83,
+    ani_seq:[0,0,0],
+    each_frames:30,
+    seq_length:3,
 	loop:1
-       }//end goForward state
+			},
+		jumpUp:{  
+		desc:"jumpUp",
+		width:58,
+		height:109,
+		ani_seq:[0,1,2,3,4,5,6,7],
+		each_frames:8,
+		seq_length:8,
+		loop:1
+			},
+			goBack:{
+			desc:"goBack",
+			width:63,
+			height:91,
+			ani_seq:[0,1,2,3,4,5],
+			each_frames:10,
+			seq_length:6,
+			loop:1
+			}
      }//end role_stateInfo          
     },//end RYU1  
 	{
@@ -158,6 +202,7 @@ var roleConfig = [{
       key_state_map:{    //按键与状态相对应
 			goForward:{
 				keys:["right","right"],
+				isDown:[false,false],//keys对应的键是否要按住不放开
 				nextstate:"goForward"
 			},
 			wait:{
@@ -197,7 +242,19 @@ $ = window.$;
 var MFG_RES_DESC= [
 		{
         bgs:["g/loading.jpg","g/front.gif"],//这个比较特殊第一张是载入图片，背景图片
-        roles:["RYU1/RYU1_wait.gif","RYU1/RYU1_goForward.gif","RYU2/RYU2_wait.gif","RYU2/RYU2_goForward.gif"],//角色图片
+        roles:["RYU1/RYU1_wait.gif",
+			//右走，左走，上跳，下蹲，
+		"RYU1/RYU1_goForward.gif","RYU1/RYU1_goBack.gif","RYU1/RYU1_jumpUp.gif","RYU1/RYU1_crouch.gif",
+			
+		
+		
+		
+		
+		
+		
+		"RYU2/RYU2_wait.gif","RYU2/RYU2_goForward.gif"],//角色图片
+
+
         skills:[
             {
                  name:"s_001",
