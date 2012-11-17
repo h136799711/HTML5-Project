@@ -22,7 +22,7 @@ function RoleModel(){
 	var _curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,_cur_state = "wait",_img,_mirror=false ,
 		_loop=0;
 	var _spriteInfo = { };//包含各种状态	，以及角色的名字，某状态的各信息，
-	
+	var _v0 = {	x:0,y:0	};//每个状态下的速度
 	/////getter
 	this.setX = function(x){	_x = x;		};
 	this.setY = function(y){	_y = y;		};
@@ -37,8 +37,10 @@ function RoleModel(){
 		_cur_state =  state;
 		_loop = 0;
 		this.setImg(AssetGetter.getRole(this.getRoleName(),this.getRoleState()));
+		_v0 = _spriteInfo.role_stateInfo[_cur_state].v0 === undefined ? {x:0,y:0} : _spriteInfo.role_stateInfo[_cur_state].v0;
 		return true;
 	};
+	//坐下角坐标X,Y
 	this.getX = function(){ return _x;		};
 	this.getY = function(){ return _y;		};
 	this.getCenterX= function() { return _x + this.getWidth() / 2;};
@@ -57,10 +59,16 @@ function RoleModel(){
 	this.getCurAnimFrame = function(){	return this.getAnimSeq()[parseInt(_curFrame,10)];}
 	this.getKeysStateMap = function(){		return _spriteInfo.key_state_map;	};
 	this.getLoop = function(){	return _spriteInfo.role_stateInfo[_cur_state]._loop;	};
-	this.getVX = function(){	return _spriteInfo.role_stateInfo[_cur_state].vx;	};
-	this.getVY = function(){	return _spriteInfo.role_stateInfo[_cur_state].vy;	};
+	this.getVX = function(){	return _v.x;	};
+	this.getVY = function(){	return _v.y;	};
 	//动画序列是否播放完成，在这个状态下
 	this.isAnimSeqOver = function(){	 return _loop >= this.getLoop();	};
+	//移动
+	this.move = function(){
+		this._x += (this.getVX() === undefined ? 0 : this.getVX());
+		this._y += (this.getVY() === undefined ? 0 : this.getVY() - _curFrame * mfgConfig.G);
+	};
+
 	this.draw = function(ctx){
 		if(typeof _img === "undefined" || _img === null){
 			return false;
@@ -74,6 +82,7 @@ function RoleModel(){
 			_curFrame = 0 ;
 			_loop++;
 		}
+		this.move();
 	};
 }
 //需要一个工厂类来创建各类角色

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>标题名</title>
+<meta charset="utf-8">
+<meta name="author" content="hebidu">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="generator" content="EditPlus">
+<meta name="revised" content="hebidu @2012-10-31">
+<style type="text/css">
+ul {
+	list-style-type:none;
+}
+span{
+	width:300px;
+	display:block;
+	float:left;
+}
+</style>
+<!--[if lt ie 9]>
+<script src="js/utils/html5shiv.js" type="text/javascript"></script>
+<![endif]-->
+<script type="text/javascript">
+function getEle(id){
+	return document.getElementById(id);
+}
+function calcDis(){
+	var v0 = getEle("v0").value;
+	var g   = getEle("gravity").value;
+	var t   = getEle("time").value;
+	var dis = v0*t - 0.5*g*t*t;
+	getEle("result-Dis").innerHTML = dis;
+	getEle("distance").value = dis;
+}
+function calcV0(){
+	var g   = getEle("gravity").value;
+	var t   = getEle("time").value;
+	var dis= getEle("distance").value;
+	var v0 = t == 0 ? 0: dis / t + 0.5 * g * t;
+	getEle("result-V0").innerHTML = v0;
+	getEle("v0").value = v0;
+}
+</script>
+</head>
+<body>
+<ul>
+<li>
+<span>time:</span>
+<input type="input" title="Decided How much time passed！" id="time" value="0" />
+</li>
+<li>
+<span>v0: </span>
+<input type="input" title="Decided the initial velocity！" id="v0" value="0" />
+</li>
+<li>
+<span>gravity: </span>
+<input type="input" title="Decided the gravity that effect the velocity！" id="gravity" value="10" />
+</li>
+<li>
+<span>distance:</span>
+<input type="input" title="the distance moved in the time that decided in up ！" id="distance" value="0"/>
+</li>
+<li>
+<span>dis = v0*t + 0.5 * g * t * t = </span>
+<input type="button" onclick="calcDis();" value="calcDis" />
+<span id="result-Dis">0</span>
+</li>
+<li>
+<span>v0 = dis / t - 0.5 * g * t = </span>
+<input type="button" onclick="calcV0();" value="calcV0" />
+<span id="result-V0">0</span>
+</li>
+</ul>
+</body>
+</html>
