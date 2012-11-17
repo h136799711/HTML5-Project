@@ -172,7 +172,7 @@ var roleConfig = [{
     width:63,
     height:83,
     ani_seq:[0,0,0],
-    each_frames:30,
+    each_frames:10,
     seq_length:3,
 	loop:1
 			},
@@ -183,7 +183,8 @@ var roleConfig = [{
 		ani_seq:[0,1,2,3,4,5,6,7],
 		each_frames:8,
 		seq_length:8,
-		loop:1
+		loop:1,
+		v0:{x:0,y:-5}
 			},
 			goBack:{
 			desc:"goBack",

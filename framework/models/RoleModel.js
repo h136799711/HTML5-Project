@@ -37,14 +37,14 @@ function RoleModel(){
 		_cur_state =  state;
 		_loop = 0;
 		this.setImg(AssetGetter.getRole(this.getRoleName(),this.getRoleState()));
-		_v0 = _spriteInfo.role_stateInfo[_cur_state].v0 === undefined ? {x:0,y:0} : _spriteInfo.role_stateInfo[_cur_state].v0;
+		_v0= _spriteInfo.role_stateInfo[_cur_state].v0 === undefined ? {x:0,y:0} : _spriteInfo.role_stateInfo[_cur_state].v0;
 		return true;
 	};
 	//坐下角坐标X,Y
 	this.getX = function(){ return _x;		};
 	this.getY = function(){ return _y;		};
 	this.getCenterX= function() { return _x + this.getWidth() / 2;};
-	this.getCenterY= function() { return _y + this.getHeight() / 2;};
+	this.getCenterY= function() { return _y - this.getHeight() / 2;};
 	//是否使图片以镜像形式显示
 	this.getMirror = function(){	 return _mirror;	};
 	this.getScale = function(){	return  _scale;	};
@@ -56,23 +56,23 @@ function RoleModel(){
 	this.getNextState = function(){		return this.getKeysStateMap()[_cur_state].nextstate;	};
 	this.getSeqLength = function(){		return _spriteInfo.role_stateInfo[_cur_state].seq_length;	};
 	this.getAnimSeq = function(){		return _spriteInfo.role_stateInfo[_cur_state].ani_seq;};
-	this.getCurAnimFrame = function(){	return this.getAnimSeq()[parseInt(_curFrame,10)];}
+	this.getCurAnimFrame = function(){	return this.getAnimSeq()[_curFrame];}
 	this.getKeysStateMap = function(){		return _spriteInfo.key_state_map;	};
 	this.getLoop = function(){	return _spriteInfo.role_stateInfo[_cur_state]._loop;	};
-	this.getVX = function(){	return _v0.x;	};
-	this.getVY = function(){	return _v0.y;	};
+	this.getVX = function(){	return _v0.x	;	};
+	this.getVY = function(){	return _v0.y	 ;	};
 	//动画序列是否播放完成，在这个状态下
 	this.isAnimSeqOver = function(){	 return _loop >= this.getLoop();	};
 	//移动
 	this.move = function(){
-		_x += (this.getVX() === undefined ? 0 : this.getVX());
-		_y += (this.getVY() === undefined ? 0 : Utils.equation.displacement( this.getVY(), _curFrame - 1 >= 0 ? _curFrame - 1 : 0));
-	};
-	this.timeBack = function(){
-		_x -= (this.getVX() === undefined ? 0 : this.getVX());
-		_y -= (this.getVY() === undefined ? 0 : Utils.equation.displacement( this.getVY(), _curFrame - 1 >= 0 ? _curFrame - 1 : 0 ) );
-		
-	};
+		_x += this.getVX();
+		if(2*_curFrame >= this.getSeqLength()){
+			_y -= this.getVY();
+		}else{
+			_y += this.getVY() ;
+		}
+	};	
+
 	this.draw = function(ctx){
 		if(typeof _img === "undefined" || _img === null){
 			return false;
@@ -81,12 +81,18 @@ function RoleModel(){
 			_scale*this.getWidth(),(_scale*this.getHeight()));
 		return true; 
 	};
+	var cnt=0;
 	this.update = function(){
-		if((_curFrame += (1.0 /  this.getEachFrames())) >= this.getSeqLength()){
+		this.move();
+		if(cnt > this.getEachFrames()){
+			_curFrame++;
+			cnt=0;
+		}
+		cnt++;
+		if(_curFrame  >= this.getSeqLength()){
 			_curFrame = 0 ;
 			_loop++;
 		}
-		this.move();
 	};
 }
 //需要一个工厂类来创建各类角色

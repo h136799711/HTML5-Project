@@ -117,7 +117,7 @@ if (!Object.create) {
 //这个效果是 位置与时间的函数关系
 //t是当前时间单位,b是起始位置,c是终点位置-起始位置,d是总共需要多少时间单位
 //时间单位，我准备使用帧做时间单位
-var Utils = {		G : 0.01	};
+var Utils = {		G : 10	};
 Utils.Tween = (function(){
     var easeInQuad = function(t,b,c,d){
         return c * (t /= d) * t + b;
@@ -136,7 +136,11 @@ Utils.Tween = (function(){
         return c/2 * (t*t*t) + b;
         return c/2 * ((t-=2)*t*t + 2) + b;
     };
+	var halfEaseInQuad = function(t,b,c,d){
+		return easeInQuad(0.5 * t > d ? d - t: t,b,c,d);
+	};
     return {
+		halfEaseInQuad:halfEaseInQuad,
         easeInQuad:easeInQuad,
         easeOutQuad:easeOutQuad,//2次方
         easeInCubic :easeInCubic, 
@@ -148,7 +152,7 @@ Utils.equation = (function(){
 	//dir_of_g 指定gravity的方向,gravity的方向默认是Y轴的负方向
 	var displacement = function(v0,t,dir_of_g){
 		//return 0;
-		return v0*t + 0.5 * Utils.G *(dir_of_g === undefined ? 1 : dir_of_g) * t * t; 
+		return v0*t+ 0.5 * Utils.G *(dir_of_g === undefined ? 1 : dir_of_g) * t * t; 
 	};
 	return {
 		displacement : displacement

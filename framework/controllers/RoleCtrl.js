@@ -6,47 +6,26 @@
 */
 function IRoleCtrl(){
 	var _model ;
-	var _side=0;
-	this. setRight =function (){
-		_side = 1;	
-		_model.setMirror(true);
-	};
-	this. setLeft =function (){
-		_side = 0;
-		_model.setMirror(false);
-	};
-	this.setScale = function(scale){
-		_model.setScale(scale);
-	};
-	this. setModel =function (model){
-		_model = model;
-	};
-	this. getModel = function(){
-		return _model;
-	};
-	this. setX = function(x){
-		_model.setX(x);
-	};
-	this. setY = function(y){
-		_model.setY(y);
-	};
-	this. update = function()
-	{				
-		_model.update();
-	};
-	this.getLoop = function(){
-		return _model.getLoop();
-	};
-	this.setRoleState = function(state){
-		return _model.setRoleState(state);
-	};
-	this.getNextState = function(){
-		return _model.getNextState();
-	};
-	this.isAnimSeqOver = function(){
-		return _model.isAnimSeqOver();
-	};
-	this.draw = function(ctx){
+	this.moveBackY = function(){	_model.moveBackY();	};
+	this.moveBackX = function(){	_model.moveBackX();	};
+	this. setRight =function (){	_model.setMirror(true);	};
+	this. setLeft		=	function ()  {		_model.setMirror(false);	};
+	this.setScale = function(scale){		_model.setScale(scale);	};
+	this. setModel =function (model){		_model = model;	};
+	this. getModel = function(){		return _model;	};
+	this. setX = function(x){		_model.setX(x);	};
+	this. setY = function(y){	_model.setY(y);	};
+	this.getX = function(){ return _model.getX();		};
+	this.getY = function(){ return _model.getY();		};
+	this.getWidth = function(){ return _model.getWidth();		};
+	this.getHeight = function(){ return _model.getHeight();		};
+	this. update = function()	{	_model.update();	};
+	this.getLoop = function(){		return _model.getLoop();	};
+	this.setRoleState = function(state){	return _model.setRoleState(state);	};
+	this.getRoleState = function(state){	return _model.getRoleState();	};
+	this.getNextState = function(){		return _model.getNextState();	 	};
+	this.isAnimSeqOver = function(){		return _model.isAnimSeqOver();	 	};
+	this.draw = function(ctx){		
 		if(_model.getMirror()){
 			ctx.save();
 			ctx.translate(_model.getCenterX(),_model.getCenterY());
@@ -66,7 +45,6 @@ function KeyBoardCtrl(){
 		_keysStateMap = keysStateMap;
 	};
 	this.setKeys = function(keys){
-
 		_keys = keys;
 	};
 	this.getKeys = function(){
@@ -168,14 +146,15 @@ function KeyBoardCtrl(){
 
 
 		var state = this.getStateActived();
-		if(typeof state !== "undefined" )
+		if(typeof state !== "undefined"){
+			if(this.getRoleState() !== state){
+				this.setRoleState(state);
+			}
+		}else if(this.isAnimSeqOver() && ((state = this.getNextState()) !== undefined) && this.checkStateCondition(state))
 		{
-			KeyBoardCtrl.prototype.setRoleState(state);
-		}else if(KeyBoardCtrl.prototype.isAnimSeqOver() && ((state = KeyBoardCtrl.prototype.getNextState()) !== undefined) && this.checkStateCondition(state))
-		{
-				KeyBoardCtrl.prototype.setRoleState(state);
+				this.setRoleState(state);
 		}else{			
-				KeyBoardCtrl.prototype.setRoleState("wait");
+				this.setRoleState("wait");
 		}
 		KeyBoardCtrl.prototype.update();
 	};

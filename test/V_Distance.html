@@ -17,7 +17,17 @@ span{
 	display:block;
 	float:left;
 }
+canvas {
+	border:5px solid #dd7;
+
+}
+div #params ul{
+	float:left;
+	list-style-type:none;
+	width:200px;
+}
 </style>
+<script src="../framework/utils/utils.js" type="text/javascript"></script>
 <!--[if lt ie 9]>
 <script src="js/utils/html5shiv.js" type="text/javascript"></script>
 <![endif]-->
@@ -29,7 +39,7 @@ function calcDis(){
 	var v0 = getEle("v0").value;
 	var g   = getEle("gravity").value;
 	var t   = getEle("time").value;
-	var dis = v0*t - 0.5*g*t*t;
+	var dis = v0*t + 0.5*g*t*t;
 	getEle("result-Dis").innerHTML = dis;
 	getEle("distance").value = dis;
 }
@@ -41,9 +51,143 @@ function calcV0(){
 	getEle("result-V0").innerHTML = v0;
 	getEle("v0").value = v0;
 }
+var Class = (function(){
+	function create(){
+		return function(){
+			this.initialize.apply(this,arguments);
+		};
+	}
+	return {
+		create:create
+
+	};
+})();
+var Utils = (function(){
+	var _g = -0.2;
+	function displacement(v,t){
+		return v*t - 0.5 * g * t * t;
+	}
+	function vt(v0,t){
+		return v0 - g* t;
+	}
+	return {
+		G:_g,
+		displacement:displacement,
+		vt:vt
+	};
+	
+})();
+var Ball = Class.create();
+Ball.prototype = {
+	_radius:0,
+	_color:"#000",
+	x:0,
+	y:0,
+	v:{x:0,y:0},
+	initialize : function(x,y,radius,color){
+		this._radius = radius === undefined || radius < 0 ? 1 : radius,this._color = color === undefined?this._color:color;
+		this.x = x ? x : 0,this.y = y?y:0;		
+	},
+	draw :function(){
+		ctx.save();
+		ctx.beginPath();
+		ctx.fillStyle = this._color;
+		ctx.arc(this.x,this.y,this._radius,0,Math.PI *2 , true);
+		ctx.fill();
+		ctx.closePath();
+		ctx.restore();
+	},
+	move: function(){
+		this.x += this.v.x;
+		this.y += (this.v.y-=(0.5*Utils.G));
+		if(this.x +  this._radius >= 960)
+		{
+			this.x = 960 - this._radius;
+		}
+		if(this.x - this._radius <= 0 )
+		{
+			this.x =  this._radius;
+		}
+		if(this.y + this._radius >= 640)
+		{
+			this.y = 640 - this._radius;
+		}
+		if(this.y - this._radius <= 0 )
+		{
+			 this.y = this._radius ;
+		}
+	},
+	update:function(){
+		this.move();
+	}
+};
+var TestGravity = Class.create();
+TestGravity.prototype = {
+	ball:null,
+	screenWidth : 960,
+	screenHeight : 640,
+
+	initialize : function(){
+		this.ball = new Ball(30,30,15,"#aa6");
+	},
+	clearCtx : function(){
+		ctx.clearRect(0,0,this.screenWidth,this.screenHeight);
+	},
+	update : function(){
+		this.clearCtx();
+		this.ball.update();
+		this.ball.draw();
+	},
+	setBallPos:function(x,y){
+		if(x !== undefined){
+			this.ball.x = x;
+		}
+		if(y !== undefined){
+			this.ball.y = y;
+		}
+	},
+	setBallVec:function(v){
+		this.ball.v.x  = v.x;
+		this.ball.v.y  = v.y;
+	}
+};
+var tg;
+
+var canvas;
+var ctx ;
+function reset()
+{
+	var x = Number(getEle("x").value);
+	var y = Number(getEle("y").value);
+	var g = Number(getEle("g").value);
+	var v = {};
+	v.x     = Number(getEle("vx").value);
+	v.y     = Number(getEle("vy").value);
+
+	Utils.G = g / (100/6);
+	tg.setBallPos(x,y);
+	tg.setBallVec(v);
+}
+function load()
+{	
+	if(tg === undefined){
+		tg = new TestGravity();
+		canvas = getEle("graph");
+		ctx = canvas.getContext("2d");
+		getEle("graph").onmousemove = function(ev){
+			getEle("cursor-position").innerHTML = "( "+ ev.offsetX +" , "+ ev.offsetY +" )";
+		};
+		reset();
+	}
+	tg.update	();
+	requestAnimFrame(load);
+}
+
 </script>
 </head>
-<body>
+<body onload="load()">
+<div>
+
 <ul>
 <li>
 <span>time:</span>
@@ -72,5 +216,33 @@ function calcV0(){
 <span id="result-V0">0</span>
 </li>
 </ul>
+
+<div id="params">
+<ul>
+<li>
+<span>重力加速度(px/s^2) </span>
+<input type="input" id="g" value="-10"/>
+</li>
+<li>
+<span>初始坐标x ,y </span>
+<input type="input" id="x" value="100" style="width:30px"/>
+<input type="input" id="y" value="100"  style="width:30px"/>
+</li>
+<li>
+<span>初始速度vx ,vy </span>
+<input type="input" id="vx" value="4" style="width:30px"/>
+<input type="input" id="vy" value="-5"  style="width:30px"/>
+</li>
+<li>
+<input type="button" value="应用" onclick="reset();"/>
+</li>
+<li>
+鼠标在canvas中的坐标值
+<span id="cursor-position">(0,0)</span>
+</li>
+</ul>
+</div>
+<canvas id="graph" width="960" height="640">not support canvas</canvas>
+</div>
 </body>
 </html>

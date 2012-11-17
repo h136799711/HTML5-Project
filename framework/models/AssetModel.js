@@ -222,19 +222,19 @@ var AssetModel = {
 };
 var AssetGetter = (function(AssetModel){
 		/*根据关数，背景下标获得背景图片*/
-	var am = AssetModel,role_models=[];
+	var role_models=[];//所有角色模型
 	var getBg = function(index){
-		return am.res.bgs[index].bg_img;
+		return AssetModel.res.bgs[index].bg_img;
 	};
 	/*根据关数，角色对象获得角色图片 (未定)*/
 	var getRole = function(role_name,role_state){
 		var filename = role_name+"/"+role_name +"_"+role_state+".gif",i;
-		return am.res.roles[filename];
-	//	for(i=am.res.roles.length-1;i>=0;i--)
+		return AssetModel.res.roles[filename];
+	//	for(i=AssetModel.res.roles.length-1;i>=0;i--)
 	//	{
-	//		if(filename === am.res.roles[i].role_url)
+	//		if(filename === AssetModel.res.roles[i].role_url)
 	//		{
-		//		return am.res.roles[i].role_img;
+		//		return AssetModel.res.roles[i].role_img;
 		//	}
 	//	}
 	};
@@ -264,39 +264,6 @@ var AssetGetter = (function(AssetModel){
 		getRoleModelByName:getRoleModelByName
 	};
 })(AssetModel);
-/** @require: RoleModel,AssetGetter(AssetModel)
-*   @author :hebidu  
-*   @Last Modify Date : 2012-11-3
-*   @Comment : 注释说明
-*/
-///////////////////////////////////////////////////////////////////////
-//由GameModel在初始化时读取
-//创建角色，所有角色。
-/*
-var FactoryModel = (function(){
-	var createRoles = function(){
-		//for(roleConfig
-		var roles = [],j;
-		for(j=0;j<roleConfig.length;j++){
-			roles.push(new RoleModel());
-			roles[j].setSpriteInfo(roleConfig[j]);
-			roles[j].setImg(AssetGetter.getRole(roles[j].getRoleName(),roles[j].getRoleState()));
-		}
-		
-		return roles;
-	};
-
-	return {
-		createRoles:createRoles
-	};
-})();*/
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////
 
 //
