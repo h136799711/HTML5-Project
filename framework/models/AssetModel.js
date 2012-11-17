@@ -89,14 +89,24 @@ var AssetModel = {
     },
     LoadRoles: function(roles) {
         Log("rolesLoding....");    
-		var j,length;
-		for(j=0,length = roles.length ;j<length;j++)
-		{
-				var img = new Image();
-				img.src = getResUrl(resConfig.imgsUrl_relative + roles[j].role_url);	
-				this.bindImageEventHandler(img);
-				roles[j].role_img = img;
+		//var j,length;
+	//	for(j=0,length = roles.length ;j<length;j++)
+	//	{
+	//			var img = new Image();
+	//			img.src = getResUrl(resConfig.imgsUrl_relative + roles[j].role_url);	
+	//			this.bindImageEventHandler(img);
+	//			roles[j].role_img = img;
 		
+	//	}
+		var url;
+		for(url in roles)
+		{
+			if(roles[url] === null){
+				var img = new Image();
+				img.src = getResUrl(resConfig.imgsUrl_relative +url);	
+				this.bindImageEventHandler(img);
+				roles[url] = img;
+			}
 		}
 
     },
@@ -178,7 +188,8 @@ var AssetModel = {
 		for( j=0;j<tmp.length;j++)
 		{
 			//console.log(tmp[j]);
-			this.res.roles.push({role_url:tmp[j],role_img:null});
+		//	this.res.roles.push({role_url:tmp[j],role_img:null});
+			this.res.roles[tmp[j]] = null;
 		}
 		tmp = data[0].skills;
 		Log("技能资源数目:"+tmp.length);	
@@ -211,30 +222,47 @@ var AssetModel = {
 };
 var AssetGetter = (function(AssetModel){
 		/*根据关数，背景下标获得背景图片*/
-	var am = AssetModel;
+	var am = AssetModel,role_models=[];
 	var getBg = function(index){
 		return am.res.bgs[index].bg_img;
 	};
 	/*根据关数，角色对象获得角色图片 (未定)*/
 	var getRole = function(role_name,role_state){
 		var filename = role_name+"/"+role_name +"_"+role_state+".gif",i;
-		for(i=am.res.roles.length-1;i>=0;i--)
-		{
-			if(filename === am.res.roles[i].role_url)
-			{
-				return am.res.roles[i].role_img;
-			}
-		}
+		return am.res.roles[filename];
+	//	for(i=am.res.roles.length-1;i>=0;i--)
+	//	{
+	//		if(filename === am.res.roles[i].role_url)
+	//		{
+		//		return am.res.roles[i].role_img;
+		//	}
+	//	}
 	};
 	/*根据关数，技能名字获得技能图片*/
 	var getSkill = function(skill_name){
 			//this.res[level]["skills"]
 	};
-		return {
-			getBg:getBg,
-			getRole:getRole,
-			getSkill:getSkill
-		};
+	var createRoleModels = function(){
+		//for(roleConfig
+		var j;
+		for(j=0;j<roleConfig.length;j++){
+			role_models[roleConfig[j].role_name] = new RoleModel();
+			role_models[roleConfig[j].role_name].setSpriteInfo(roleConfig[j]);
+		}
+		
+	};
+	var getRoleModelByName = function(role_name){
+		if(role_models.length <= 0 ){
+			createRoleModels();
+		}
+		return role_models[role_name];
+	};
+	return {
+		getBg:getBg,
+		getRole:getRole,
+		getSkill:getSkill,
+		getRoleModelByName:getRoleModelByName
+	};
 })(AssetModel);
 /** @require: RoleModel,AssetGetter(AssetModel)
 *   @author :hebidu  
@@ -244,6 +272,7 @@ var AssetGetter = (function(AssetModel){
 ///////////////////////////////////////////////////////////////////////
 //由GameModel在初始化时读取
 //创建角色，所有角色。
+/*
 var FactoryModel = (function(){
 	var createRoles = function(){
 		//for(roleConfig
@@ -260,7 +289,7 @@ var FactoryModel = (function(){
 	return {
 		createRoles:createRoles
 	};
-})();
+})();*/
 
 
 

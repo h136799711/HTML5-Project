@@ -117,7 +117,8 @@ if (!Object.create) {
 //这个效果是 位置与时间的函数关系
 //t是当前时间单位,b是起始位置,c是终点位置-起始位置,d是总共需要多少时间单位
 //时间单位，我准备使用帧做时间单位
-var Tween = (function(){
+var Utils = {		G : 0.01	};
+Utils.Tween = (function(){
     var easeInQuad = function(t,b,c,d){
         return c * (t /= d) * t + b;
     };
@@ -142,5 +143,15 @@ var Tween = (function(){
         easeOutCubic:easeOutCubic,
         easeInOutCubic :easeInOutCubic //3次方
     };
+})();
+Utils.equation = (function(){
+	//dir_of_g 指定gravity的方向,gravity的方向默认是Y轴的负方向
+	var displacement = function(v0,t,dir_of_g){
+		//return 0;
+		return v0*t + 0.5 * Utils.G *(dir_of_g === undefined ? 1 : dir_of_g) * t * t; 
+	};
+	return {
+		displacement : displacement
+	};
 })();
 //

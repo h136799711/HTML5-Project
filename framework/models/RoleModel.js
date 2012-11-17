@@ -19,17 +19,17 @@ function RoleModel(){
 	//_x,_y_scale分别是屏幕坐标和缩放大小，缩放用于调整原图片大小
 	//_x,_y分别是人物的左下角坐标，这样即使人物高度不一致，但其底部是对齐即可
 	//cur_state的改变将会基于键盘的响应或AI的控制
-	var _curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,_cur_state = "wait",_img,_mirror=false ,
+	var _curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,_cur_state,_img,_mirror=false ,
 		_loop=0;
 	var _spriteInfo = { };//包含各种状态	，以及角色的名字，某状态的各信息，
-	var _v0 = {	x:0,y:0	};//每个状态下的速度
+	var _v0 = {	x:0,y:0	};//每个状态下的初速度
 	/////getter
 	this.setX = function(x){	_x = x;		};
 	this.setY = function(y){	_y = y;		};
 	this.setScale = function(scale){	_scale = scale;		};
 	this.setMirror = function(mirror){	_mirror = mirror;	 };
 	this.setImg = function(img){		_img = img;	 	};
-	this.setSpriteInfo = function(spriteInfo){	_spriteInfo = spriteInfo;	};
+	this.setSpriteInfo = function(spriteInfo){	_spriteInfo = spriteInfo;	this.setRoleState("wait");};
 	this. setRoleState = function(state){
 		if(_spriteInfo === undefined || _spriteInfo.role_stateInfo[state] === undefined){
 			return false;
@@ -59,16 +59,20 @@ function RoleModel(){
 	this.getCurAnimFrame = function(){	return this.getAnimSeq()[parseInt(_curFrame,10)];}
 	this.getKeysStateMap = function(){		return _spriteInfo.key_state_map;	};
 	this.getLoop = function(){	return _spriteInfo.role_stateInfo[_cur_state]._loop;	};
-	this.getVX = function(){	return _v.x;	};
-	this.getVY = function(){	return _v.y;	};
+	this.getVX = function(){	return _v0.x;	};
+	this.getVY = function(){	return _v0.y;	};
 	//动画序列是否播放完成，在这个状态下
 	this.isAnimSeqOver = function(){	 return _loop >= this.getLoop();	};
 	//移动
 	this.move = function(){
-		this._x += (this.getVX() === undefined ? 0 : this.getVX());
-		this._y += (this.getVY() === undefined ? 0 : this.getVY() - _curFrame * mfgConfig.G);
+		_x += (this.getVX() === undefined ? 0 : this.getVX());
+		_y += (this.getVY() === undefined ? 0 : Utils.equation.displacement( this.getVY(), _curFrame - 1 >= 0 ? _curFrame - 1 : 0));
 	};
-
+	this.timeBack = function(){
+		_x -= (this.getVX() === undefined ? 0 : this.getVX());
+		_y -= (this.getVY() === undefined ? 0 : Utils.equation.displacement( this.getVY(), _curFrame - 1 >= 0 ? _curFrame - 1 : 0 ) );
+		
+	};
 	this.draw = function(ctx){
 		if(typeof _img === "undefined" || _img === null){
 			return false;

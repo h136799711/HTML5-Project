@@ -15,6 +15,9 @@ function IRoleCtrl(){
 		_side = 0;
 		_model.setMirror(false);
 	};
+	this.setScale = function(scale){
+		_model.setScale(scale);
+	};
 	this. setModel =function (model){
 		_model = model;
 	};

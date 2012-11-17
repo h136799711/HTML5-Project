@@ -19,13 +19,12 @@ function GameModel() {
     var that = this;
     this.state = PRE_INIT;
 	var framepassed = 0,start_update_time=0,fps=60;
+	var left_role ={}  , right_role ={} ;
 	//背景，角色，技能，音效的总载入进度
 	this.assetLoadingStatus  = 0;
-	this.roles = [];
-	this.roleCtrl1 = new KeyBoardCtrl();
-	this.aiCtrl = AICtrl;
+	//this.roles = [];//所有角色
 	this.level = 0;//游戏关卡
-	this.enemy = 0;
+
 	//地面Y值
 	this.getGroundY = function(){
 		return that.screenHeight - 25;
@@ -170,11 +169,11 @@ function GameModel() {
 	};
 	//绘制角色
 	this.drawRoles = function(){
+		left_role.update();
+		left_role.draw(that.ctx);
+		right_role.update();
+		right_role.draw(that.ctx);
 		//var i;
-		that.roleCtrl1.update();
-		that.aiCtrl.update();
-		that.roleCtrl1.draw(that.ctx);
-		that.aiCtrl.draw(that.ctx);
 		//for(i=that.roles[that.level].length-1;i>=0;i--)
 		//{
 		//	that.roles[that.level][i].update();
@@ -184,28 +183,34 @@ function GameModel() {
 
 	//初始化角色
 	this.InitRoles = function(){
-		that.roles = FactoryModel.createRoles();
-		
-		var i;
-		for(i=that.roles.length-1;i>=0;i--)
-		{
-			var mdl = that.roles[i];
-			mdl.setScale(1.5);
-			mdl.setY(that.getGroundY());
-		}
 
 	};
 	this.selectRole = function(){
-		var select = 0;
-		that.roleCtrl1.setKeys(KEY_PLAYER1);
-		that.roleCtrl1.setModel(that.roles[select]);
-		that.roleCtrl1.setKeysStateMap(that.roles[select].getKeysStateMap());
-		that.roleCtrl1.setLeft();
-		that.roleCtrl1.setX(that.leftX);
+		left_role = that.setRoleCtrl(AssetGetter.getRoleModelByName("RYU1"),0,"KeyBoardCtrl");
+		right_role = that.setRoleCtrl(AssetGetter.getRoleModelByName("RYU2"),1,"AICtrl");
+	};
 
-		that.aiCtrl.setModel(that.roles[1]);
-		that.aiCtrl.setRight();
-		that.aiCtrl.setX(that.rightX);
+	this.setRoleCtrl = function(role_model,side,ctrl_type){
+		var role_ctrl;
+		if(ctrl_type === "KeyBoardCtrl")
+		{
+			role_ctrl = new KeyBoardCtrl();
+			role_ctrl.setKeys(KEY_PLAYER1);
+			role_ctrl.setKeysStateMap(role_model.getKeysStateMap());
+		}else{
+			role_ctrl = AICtrl;
+		}
+		role_ctrl.setModel(role_model);//设置角色模型
+		role_ctrl.setY(that.getGroundY());//设置地板
+		role_ctrl.setScale(1.5);//设置放大倍数
+		if(side === 0){
+			role_ctrl.setLeft();
+			role_ctrl.setX(that.leftX);
+		}else{
+			role_ctrl.setRight();
+			role_ctrl.setX(that.rightX);
+		}
+		return role_ctrl;
 	};
 
 

@@ -11,7 +11,7 @@ var mfgConfig = {
         screenHeight: 480,
         remoteBaseUrl: "http://www.hebidu.cn/html5/",
         localBaseUrl: "http://127.0.0.1:8080/HTML5-Project/",
-        G = 9,
+
         logLevel: 5,//记录开发用
         alertLevel: 4,//警告，使用alert方法显示文字
         toUserLevel: 3,//给予用户看
@@ -165,7 +165,7 @@ var roleConfig = [{
     each_frames:6,
     seq_length:6,
 	loop:1,
-	v0:{x:0,y:0.1} //初始速度
+	v0:{x:1.5,y:0} //初始速度
        },//end goForward state
 	crouch:{
     desc:"crouch",
@@ -192,7 +192,8 @@ var roleConfig = [{
 			ani_seq:[0,1,2,3,4,5],
 			each_frames:10,
 			seq_length:6,
-			loop:1
+			loop:1,
+			v0:{x:-2,y:0} //初始速度
 			}
      }//end role_stateInfo          
     },//end RYU1  
