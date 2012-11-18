@@ -1,5 +1,5 @@
 window.requestAnimFrame = (function() {
-        var fps = 60;
+        var fps = 17;
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
         function(callback, element) {
             window.setTimeout(callback, fps);
@@ -113,11 +113,14 @@ if (!Object.create) {
         return new F();
     };
 }
+if(!Date.now){
+		Date.now = function(){	return new Date().getTime();};	
+}
 /////////////////////////////
 //这个效果是 位置与时间的函数关系
 //t是当前时间单位,b是起始位置,c是终点位置-起始位置,d是总共需要多少时间单位
 //时间单位，我准备使用帧做时间单位
-var Utils = {		G : 10	};
+var Utils = {		G : -10 	};
 Utils.Tween = (function(){
     var easeInQuad = function(t,b,c,d){
         return c * (t /= d) * t + b;
@@ -157,5 +160,23 @@ Utils.equation = (function(){
 	return {
 		displacement : displacement
 	};
+})();
+Utils.FPS = (function(){
+	var _fps =60,passed_frames=0,pre_time=  (new Date()).getTime();
+	function get(){
+		var now = (new Date()).getTime();
+		if(now - pre_time >= 1000){
+			_fps = passed_frames;
+			passed_frames=0;
+			pre_time = now;
+			FPS_RATE = Number(_fps / 60);
+			return _fps; 
+		}
+		passed_frames++;
+		return _fps;		
+	}
+	return {
+		get:get
+	};	
 })();
 //

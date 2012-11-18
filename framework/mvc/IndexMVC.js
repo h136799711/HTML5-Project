@@ -23,7 +23,6 @@ function IndexModel() {
 	};
 	//点击开始按钮时触发
     this.onstart = function(eve) {
-        mfgConfig.appStartTime = Date.now();
 		MFGEvent.fireEvent(mfgEvents.assetLoad);//开始载入资源
     };
 	this.unbindEventHandler = function(){
@@ -32,7 +31,7 @@ function IndexModel() {
 	this.bindEventHandler = function(){
         $(PREFIX_ID + clsid_parms.id_start).bind("click", this.onstart);
 	};
-
+	
 }
 IndexModel.fn = IndexModel.prototype = new BaseModel();
 //
@@ -85,12 +84,14 @@ function IndexView() {
         $(PREFIX_ID + clsid_parms.id_start).hide();
     };
     this.bindEventHandler = function() {
+        $(document).bind("resize", this.Layout);
         $(PREFIX_ID + clsid_parms.id_start).bind("mouseover", this.startmouseover);
         $(PREFIX_ID + clsid_parms.id_start).bind("mouseout", this.startmouseout);
         $(PREFIX_ID + clsid_parms.id_start).bind("click", this.onstart);
         $(PREFIX_ID + clsid_parms.id_closeLight).bind("click", this.toggleLight);
     };
     this.unbindEventHandler = function() {
+        $(document).unbind("resize", this.Layout);
         $(PREFIX_ID + clsid_parms.id_start).unbind("mouseover", this.startmouseover);
         $(PREFIX_ID + clsid_parms.id_start).unbind("mouseout", this.startmouseout);
         $(PREFIX_ID + clsid_parms.id_start).unbind("click", this.onstart);

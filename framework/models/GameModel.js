@@ -13,11 +13,9 @@ function GameModel() {
 	var GS_RESTART = 0X0005; //重新开始 , 
 	var PRE_INIT = 0X0015; //预初始 , 
 	var GS_EXIT = 0XFFFF; //退出游戏，关闭页面
-	var framepassed = 0,start_update_time=0,fps=60;
 	var left_role ={}  , right_role ={} ;
 	var assetLoadingStatus  = 0;
 	var that =this;
-	
     this.ctx=undefined;
     this.state = PRE_INIT;//游戏的即时状态
 	//背景，角色，技能，音效的总载入进度
@@ -118,9 +116,15 @@ function GameModel() {
 		}
 		this.ctx.textAlign = "left";
 		this.ctx.fillStyle = bgColor = bgColor === undefined ? "#ffffff" : bgColor;
-		this.ctx.fillRect(x,y-20,this.ctx.measureText(info).width,25);
+		if(this.ctx.measureText){
+			this.ctx.fillRect(x,y-20,this.ctx.measureText(info).width,25);
+		}
 		this.ctx.fillStyle = color ? color:"blue";
-		this.ctx.fillText(info,x,y);
+		if(this.ctx.fillText){
+			this.ctx.fillText(info,x,y);
+		}else{
+			Log(info,mfgConfig.toUserLevel);
+		}
 	};
 	this.drawBG = function(){
 		 this.ctx.drawImage(AssetGetter.getBg(1), 0, 0, this.worldRect.rightDown.x,this.worldRect.rightDown.y + this.groundY); 
@@ -179,12 +183,7 @@ function GameModel() {
 	 this.clearScreen = function(){		
 		this.ctx.clearRect(0, 0, this.worldRect.rightDown.x,this.worldRect.rightDown.y + this.groundY); 
 	};
-	 this.update = function() {		
-		if(Date.now() - start_update_time >= 1000){		
-			fps = FRAMES_PASSED - framepassed;
-			framepassed = FRAMES_PASSED;
-			start_update_time = Date.now();
-		}
+	 this.update = function() {
 		switch (this.state) {
 		case PRE_INIT:
 			InputModel.init();
@@ -226,7 +225,8 @@ function GameModel() {
 		{
 			this.setRestart();
 		}
-		this.Write("FPS: "+fps,520,30,"#f08080");
+		this.Write("FPS: "+Utils.FPS.get(),520,30,"#f08080");
+		//Log("FPS_RATE = "+FPS_RATE,mfgConfig.toUserLevel);
     };
 	//设置资源载入进度
 	this.setAssetLoadingStatus= function(ev){

@@ -37,7 +37,12 @@ function RoleModel(){
 		_cur_state =  state;
 		_loop = 0;
 		this.setImg(AssetGetter.getRole(this.getRoleName(),this.getRoleState()));
-		_v0= _spriteInfo.role_stateInfo[_cur_state].v0 === undefined ? {x:0,y:0} : _spriteInfo.role_stateInfo[_cur_state].v0;
+		if(_spriteInfo.role_stateInfo[_cur_state].v0 !== undefined){
+			_v0.x=  _spriteInfo.role_stateInfo[_cur_state].v0.x;
+			_v0.y = _spriteInfo.role_stateInfo[_cur_state].v0.y;
+		}else{
+			_v0.x = 0;_v0.y = 0;
+		}
 		return true;
 	};
 	//坐下角坐标X,Y
@@ -48,7 +53,7 @@ function RoleModel(){
 	//是否使图片以镜像形式显示
 	this.getMirror = function(){	 return _mirror;	};
 	this.getScale = function(){	return  _scale;	};
-	this.getEachFrames = function(){	return _spriteInfo.role_stateInfo[_cur_state].each_frames;	};	
+	this.getEachFrames = function(){	return _spriteInfo.role_stateInfo[_cur_state].each_frames ;	};	
 	this.getWidth = function(){	return _spriteInfo.role_stateInfo[_cur_state].width;	 	};
 	this.getHeight = function(){		return _spriteInfo.role_stateInfo[_cur_state].height;	};
 	this.getRoleName = function(){		return _spriteInfo.role_name;	};
@@ -65,12 +70,8 @@ function RoleModel(){
 	this.isAnimSeqOver = function(){	 return _loop >= this.getLoop();	};
 	//移动
 	this.move = function(){
-		_x += this.getVX();
-		if(2*_curFrame >= this.getSeqLength()){
-			_y -= this.getVY();
-		}else{
-			_y += this.getVY() ;
-		}
+		_x += (this.getVX()	/ (FPS_RATE >0 ? FPS_RATE : 1));
+		_y += (_v0.y -= (0.5*Utils.G / 8));		
 	};	
 
 	this.draw = function(ctx){
@@ -84,9 +85,10 @@ function RoleModel(){
 	var cnt=0;
 	this.update = function(){
 		this.move();
-		if(cnt > this.getEachFrames()){
+		if(cnt > this.getEachFrames() * (FPS_RATE>0?FPS_RATE:1)){
 			_curFrame++;
 			cnt=0;
+
 		}
 		cnt++;
 		if(_curFrame  >= this.getSeqLength()){
