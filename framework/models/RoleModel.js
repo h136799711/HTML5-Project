@@ -38,8 +38,8 @@ function RoleModel(){
 		_loop = 0;
 		this.setImg(AssetGetter.getRole(this.getRoleName(),this.getRoleState()));
 		if(_spriteInfo.role_stateInfo[_cur_state].v0 !== undefined){
-			_v0.x=  _spriteInfo.role_stateInfo[_cur_state].v0.x;
-			_v0.y = _spriteInfo.role_stateInfo[_cur_state].v0.y;
+			_v0.x =  Number(_spriteInfo.role_stateInfo[_cur_state].v0.x);
+			_v0.y = Number(_spriteInfo.role_stateInfo[_cur_state].v0.y);
 		}else{
 			_v0.x = 0;_v0.y = 0;
 		}
@@ -63,15 +63,22 @@ function RoleModel(){
 	this.getAnimSeq = function(){		return _spriteInfo.role_stateInfo[_cur_state].ani_seq;};
 	this.getCurAnimFrame = function(){	return this.getAnimSeq()[_curFrame];}
 	this.getKeysStateMap = function(){		return _spriteInfo.key_state_map;	};
-	this.getLoop = function(){	return _spriteInfo.role_stateInfo[_cur_state]._loop;	};
+	this.getLoop = function(){	return _spriteInfo.role_stateInfo[_cur_state].loop;	};
 	this.getVX = function(){	return _v0.x	;	};
 	this.getVY = function(){	return _v0.y	 ;	};
+	this.setVY = function(vy){	_v0.y	 = vy ;	};
 	//动画序列是否播放完成，在这个状态下
-	this.isAnimSeqOver = function(){	 return _loop >= this.getLoop();	};
+	this.isAnimSeqOver = function(){	 return this.getLoop() === undefined || _loop >= this.getLoop();	};
+	//动画序列是否正在播放中
+	this.isAnimating = function(){	 return (cnt !== 0 || _curFrame !== 0 ) && _cur_state !== "wait";	};
 	//移动
 	this.move = function(){
+		if(_cur_state === "jump_back")
+		{
+			console.log(this.getVX());
+		}
 		_x += (this.getVX()	/ (FPS_RATE >0 ? FPS_RATE : 1));
-		_y += (_v0.y -= (0.5*Utils.G / 8));		
+		_y += (_v0.y -= (0.5*Utils.G / 17));		
 	};	
 
 	this.draw = function(ctx){
@@ -88,11 +95,11 @@ function RoleModel(){
 		if(cnt > this.getEachFrames() * (FPS_RATE>0?FPS_RATE:1)){
 			_curFrame++;
 			cnt=0;
-
 		}
 		cnt++;
 		if(_curFrame  >= this.getSeqLength()){
 			_curFrame = 0 ;
+			cnt=0;
 			_loop++;
 		}
 	};

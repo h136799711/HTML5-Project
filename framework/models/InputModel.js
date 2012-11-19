@@ -51,14 +51,26 @@ var InputModel = (function(){
 		
 	};
 	var bindEventListener = function(){
-		document.body.addEventListener("keypress",onkeyPress);
-		document.body.addEventListener("keydown",onkeyDown);
-		document.body.addEventListener("keyup",onkeyUp);
+		if(document.body.addEventListener){
+			document.body.addEventListener("keypress",onkeyPress);
+			document.body.addEventListener("keydown",onkeyDown);
+			document.body.addEventListener("keyup",onkeyUp);
+		}else if(document.body.attachEvent){
+			document.body.attachEvent("keypress",onkeyPress);
+			document.body.attachEvent("keydown",onkeyDown);
+			document.body.attachEvent("keyup",onkeyUp);
+		}
 	};
 	var unbindEventListener = function(){
-		document.body.removeEventListener("keydown",onkeyDown);
-		document.body.removeEventListener("keypress",onkeyPress);
-		document.body.removeEventListener("keyup",onkeyUp);		
+		if(document.body.removeEventListener){
+			document.body.removeEventListener("keypress",onkeyPress);
+			document.body.removeEventListener("keydown",onkeyDown);
+			document.body.removeEventListener("keyup",onkeyUp);
+		}else if(document.body.detachEvent){
+			document.body.detachEvent("keypress",onkeyPress);
+			document.body.detachEvent("keydown",onkeyDown);
+			document.body.detachEvent("keyup",onkeyUp);
+		}
 	};
 	var isKeyUp = function(key){
 		if(keyStates[key] === undefined){

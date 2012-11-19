@@ -155,7 +155,7 @@ Utils.equation = (function(){
 	//dir_of_g 指定gravity的方向,gravity的方向默认是Y轴的负方向
 	var displacement = function(v0,t,dir_of_g){
 		//return 0;
-		return v0*t+ 0.5 * Utils.G *(dir_of_g === undefined ? 1 : dir_of_g) * t * t; 
+		return v0*t+ 0.5 * (Utils.G / 17) *(dir_of_g === undefined ? 1 : dir_of_g) * t * t; 
 	};
 	return {
 		displacement : displacement

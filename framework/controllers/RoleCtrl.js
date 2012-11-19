@@ -6,13 +6,14 @@
 */
 function IRoleCtrl(){
 	var _model ;
-	this.moveBackY = function(){	_model.moveBackY();	};
-	this.moveBackX = function(){	_model.moveBackX();	};
+	this.isAnimating = function(){ return 	_model.isAnimating();	};
+
 	this. setRight =function (){	_model.setMirror(true);	};
 	this. setLeft		=	function ()  {		_model.setMirror(false);	};
 	this.setScale = function(scale){		_model.setScale(scale);	};
 	this. setModel =function (model){		_model = model;	};
 	this. getModel = function(){		return _model;	};
+	this. setVY = function(vy){	_model.setVY(vy);	};
 	this. setX = function(x){		_model.setX(x);	};
 	this. setY = function(y){	_model.setY(y);	};
 	this.getX = function(){ return _model.getX();		};
@@ -52,6 +53,9 @@ function KeyBoardCtrl(){
 	};
 	//检测这个state被激活的条件是否满足
 	this.checkStateCondition = function(state){
+		if(!state || ! _keysStateMap[state].keys){
+			return false;
+		}
 		//记录下面for循环中，同样的键可能要读取多次
 		//比如a键可能需要 a right a 这样序列中的a键的次数和序列
 		//判断序列用时间来a right a 则最后一个a的时间要大于right的时间才行
@@ -111,7 +115,14 @@ function KeyBoardCtrl(){
 					return state;
 			}
 		}
-		
+		return undefined;
+	};
+	this.checkSpecialCondition = function(){
+	//	Log(this.getRoleState()+this.getNextState());
+		if(this.getRoleState() === "jumpUp" && this.getNextState() === "jump_down"){
+			return true;
+		}
+		return false;
 	};
 	this.update = function(){	
 		//右 
@@ -146,15 +157,15 @@ function KeyBoardCtrl(){
 
 
 		var state = this.getStateActived();
-		if(typeof state !== "undefined"){
-			if(this.getRoleState() !== state){
-				this.setRoleState(state);
-			}
-		}else if(this.isAnimSeqOver() && ((state = this.getNextState()) !== undefined) && this.checkStateCondition(state))
+		if(this.isAnimating()){
+			
+		}else if(this.isAnimSeqOver())
 		{
+				this.setRoleState((state = this.getNextState()));
+		}else if(typeof state !== "undefined" && this.getRoleState() !== state ){
 				this.setRoleState(state);
-		}else{			
-				this.setRoleState("wait");
+		}else{
+				this.setRoleState("wait");			
 		}
 		KeyBoardCtrl.prototype.update();
 	};

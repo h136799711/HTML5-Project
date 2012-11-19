@@ -123,6 +123,16 @@ var roleConfig = [{
     //
       role_name:"RYU1",
       key_state_map:{    //按键与状态相对应
+		jump_forward:{
+				keys:["right","up"],
+				isDown:[false,false],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
+				nextstate:"wait"
+			},
+		jump_back:{
+				keys:["left","up"],
+				isDown:[false,false],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
+				nextstate:"wait"
+			},
 		crouch:{
 				keys:["down"],
 				isDown:[true],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
@@ -130,7 +140,7 @@ var roleConfig = [{
 			},
 		jumpUp:{
 				keys:["up"],
-				nextstate:"wait"
+				nextstate:"jump_down"
 			},
 			goBack:{
 				keys:["left"],
@@ -142,8 +152,11 @@ var roleConfig = [{
 				isDown:[true],//keys对应的键是否要按住不放开,true这个必须按住才行,false必须按过才行,可选参数，按过=按下，放开
 				nextstate:"wait"
 			},
+			jump_down:{
+				isDown:[],//直接满足条件
+				nextstate:"wait"
+			},
 			wait:{
-				keys:[],
 				isDown:[],
 				nextstate:"wait"
 			}
@@ -191,7 +204,7 @@ var roleConfig = [{
 		each_frames:8,
 		seq_length:8,
 		loop:1,
-		v0:{x:0,y:-15}
+		v0:{x:0,y:-10}
 			},
 			goBack:{
 			desc:"goBack",
@@ -202,9 +215,55 @@ var roleConfig = [{
 			seq_length:6,
 			loop:1,
 			v0:{x:-2,y:0} //初始速度
+			},
+		jump_down:{
+			desc:"jump_down",
+			width:57,
+			height:109,
+			ani_seq:[0,1,1,1,1,1,1],
+			each_frames:7,
+			seq_length:7,
+			loop:1 ,
+			v0:{x:0,y:0}
+			},
+			jump_back:{
+			desc:"jump_back",
+			width:124,
+			height:109,
+			ani_seq:[0,1,2,3,4,5,6,7,8],
+			each_frames:10,
+			seq_length:9,
+			loop:1 ,
+			v0:{x:-3,y:-10}
+			},	
+			jump_forward:{
+			desc:"jump_forward",
+			width:124,
+			height:109,
+			ani_seq:[0,1,2,3,4,5,6,7,8],
+			each_frames:10,
+			seq_length:9,
+			loop:1    ,
+			v0:{x:3,y:-10}
 			}
-     }//end role_stateInfo          
+			//end goForward state
+
+     }//end role_stateInfo       
+	 
+
     },//end RYU1  
+	
+
+
+
+
+
+
+
+
+
+
+
 	{
       role_name : "RYU2",
       key_state_map:{    //按键与状态相对应
@@ -243,7 +302,8 @@ var roleConfig = [{
     seq_length:6,
 	loop:1    
 	}//end goForward state
-     }//end role_stateInfo          
+     
+	 }//end role_stateInfo          
     }//end RYU2 
 ];//end roleConfig
 $ = window.$;
@@ -252,7 +312,7 @@ var MFG_RES_DESC= [
         bgs:["g/loading.jpg","g/front.gif"],//这个比较特殊第一张是载入图片，背景图片
         roles:["RYU1/RYU1_wait.gif",
 			//右走，左走，上跳，下蹲，
-		"RYU1/RYU1_goForward.gif","RYU1/RYU1_goBack.gif","RYU1/RYU1_jumpUp.gif","RYU1/RYU1_crouch.gif",
+		"RYU1/RYU1_goForward.gif","RYU1/RYU1_goBack.gif","RYU1/RYU1_jumpUp.gif","RYU1/RYU1_crouch.gif","RYU1/RYU1_jump_down.gif","RYU1/RYU1_jump_back.gif","RYU1/RYU1_jump_forward.gif",
 			
 		
 		

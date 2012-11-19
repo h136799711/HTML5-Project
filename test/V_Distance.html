@@ -70,6 +70,15 @@ var Utils2 = (function(){
 	function vt(v0,t){
 		return v0 - g* t;
 	}
+	function onLoad(){
+		alert("img onload");
+	}
+	function getImage(imgUrl){
+		var img = new Image();
+		img.onload = onLoad;
+		img.src = imgUrl;
+		return img;
+	}
 	return {
 		G:_g,
 		displacement:displacement,
@@ -91,6 +100,7 @@ Ball.prototype = {
 	draw :function(){
 		ctx.save();
 		ctx.beginPath();
+		
 		ctx.fillStyle = this._color;
 		ctx.arc(this.x,this.y,this._radius,0,Math.PI *2 , true);
 		ctx.fill();
@@ -129,9 +139,10 @@ TestGravity.prototype = {
 	ball:null,
 	screenWidth : 960,
 	screenHeight : 640,
-
+	img:null;
 	initialize : function(){
 		this.ball = new Ball(30,30,15,"#aa6");
+		this.img = Utils2.getImg("http://127.0.0.1:8080/HTML5-Project/asset/images/bgtest.jpg");
 	},
 	clearCtx : function(){
 		ctx.clearRect(0,0,this.screenWidth,this.screenHeight);

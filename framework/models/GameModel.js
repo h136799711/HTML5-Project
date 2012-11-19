@@ -27,7 +27,8 @@ function GameModel() {
 	this.csDet_RoleCtrl = function(role_ctrl1,role_ctrl2){
 	
 	if(role_ctrl1.getY() > this.worldRect.rightDown.y){	role_ctrl1.setY(this.worldRect.rightDown.y);}
-	else if(role_ctrl1.getY() - role_ctrl1.getHeight() < this.worldRect.leftUp.y){	role_ctrl1.setY(this.worldRect.rightDown.y);		}
+	else if(role_ctrl1.getY() - role_ctrl1.getHeight() < this.worldRect.leftUp.y){	//role_ctrl1.setY(this.worldRect.rightDown.y);	
+	}
 	if(role_ctrl1.getX() < this.worldRect.leftUp.x)		{	role_ctrl1.setX(this.worldRect.leftUp.x);		}
 	else if(role_ctrl1.getX() + role_ctrl1.getWidth()> this.worldRect.rightDown.x) {	role_ctrl1.setX(this.worldRect.rightDown.x - role_ctrl1.getWidth());	}
 
@@ -68,19 +69,18 @@ function GameModel() {
 		this.ctx.font ="20pt 宋体";
 		this.Write("资源载入中...."+assetLoadingStatus+"%.",10,24,"#5d7");
 		
-	    Log("正在载入资源中...请等待!",mfgConfig.toUserLevel);
+	    Log("正在载入资源中...如果太慢请按 F5!",mfgConfig.toUserLevel);
 		if(assetLoadingStatus  >= 100 )
 		{
 			this.setInit();
 		}
+		Log(assetLoadingStatus,mfgConfig.toUserLevel);
     };
     this.Init = function() {
-		console.log("Init");
 		this.InitRoles();
 		InputModel.bindEventListener();	
 		this.selectRole();
 		this.setRunning();
-        Log("Init GameModel!");
         Log("游戏愉快!   : )  ",mfgConfig.toUserLevel);
     };
 	this.Running = function() {
@@ -88,30 +88,26 @@ function GameModel() {
 		this.clearScreen();
         this.drawBG();
 		this.drawRoles();
-		//Log("Running GameModel!");		
     };
     this.Pausing = function() {
-		Log("Pausing Game!",mfgConfig.toUserLevel);
+		Log("游戏暂停中!",mfgConfig.toUserLevel);
 	};
     this.Restart = function() {
 		InputModel.unbindEventListener();
 		this.clearScreen();
-		this.Write("Restart Game! ",100,100);
-        Log("Restart Game!",mfgConfig.toUserLevel);		
+        Log("重开游戏中!",mfgConfig.toUserLevel);		
 		this.setInit();
 		InputModel.bindEventListener();
     };
     this.Exit = function() {
 		this.clearScreen();
-		this.Write("Exiting....................! ",100,100);
-        Log("Exit GameModel!");
-		
+		this.Write("退出中....................! ",100,100);
+        
     };
 
 	
 	this.Write = function(info,x,y,color,bgColor){
 		if(typeof(this.ctx) === "undefined") {
-			//Log("还未定义ctx");
 			return ;
 		}
 		this.ctx.textAlign = "left";
@@ -127,7 +123,7 @@ function GameModel() {
 		}
 	};
 	this.drawBG = function(){
-		 this.ctx.drawImage(AssetGetter.getBg(1), 0, 0, this.worldRect.rightDown.x,this.worldRect.rightDown.y + this.groundY); 
+		 this.ctx.drawImage(AssetGetter.getBg(1), 0, 0, 440,224,0, 0, this.worldRect.rightDown.x,this.worldRect.rightDown.y + this.groundY); 
 	};
 	//绘制角色
 	this.drawRoles = function(){
@@ -136,17 +132,11 @@ function GameModel() {
 		this.collisionDetection();
 		left_role.draw(this.ctx);
 		right_role.draw(this.ctx);
-		//var i;
-		//for(i=this.roles[this.level].length-1;i>=0;i--)
-		//{
-		//	this.roles[this.level][i].update();
-		//	this.roles[this.level][i].draw(this.ctx);
-		//}
 	};
 
 	//初始化角色
 	this.InitRoles = function(){
-
+		
 	};
 	this.selectRole = function(){
 		left_role = this.setRoleCtrl(AssetGetter.getRoleModelByName("RYU1"),0,"KeyBoardCtrl");
@@ -230,7 +220,7 @@ function GameModel() {
     };
 	//设置资源载入进度
 	this.setAssetLoadingStatus= function(ev){
-		assetLoadingStatus = parseInt(((100*ev.args.loaded) / ev.args.totalLoad),10);
+		assetLoadingStatus = Number((100.0*ev.args.loaded) / ev.args.totalLoad);
 	};
     //设置游戏状态
     this.setGameState = function(state) {
