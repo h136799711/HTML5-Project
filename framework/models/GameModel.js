@@ -220,7 +220,7 @@ function GameModel() {
     };
 	//设置资源载入进度
 	this.setAssetLoadingStatus= function(ev){
-		assetLoadingStatus = Number((100.0*ev.args.loaded) / ev.args.totalLoad);
+		assetLoadingStatus = parseInt(((100.0*ev.args.loaded) / ev.args.totalLoad),10);
 	};
     //设置游戏状态
     this.setGameState = function(state) {
