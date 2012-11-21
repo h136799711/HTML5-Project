@@ -19,11 +19,13 @@ function RoleModel(){
 	//_x,_y_scale分别是屏幕坐标和缩放大小，缩放用于调整原图片大小
 	//_x,_y分别是人物的左下角坐标，这样即使人物高度不一致，但其底部是对齐即可
 	//cur_state的改变将会基于键盘的响应或AI的控制
-	var _curFrame = 0, updateFrame = 5, _x=0,_y=0,_scale=1,_cur_state,_img,_mirror=false ,
-		_loop=0;
+	var _curFrame = 0,  _x=0,_y=0,_scale=1,_cur_state,_img,_mirror=false ,
+		_loop=0,_damage = 0;
 	var _spriteInfo = { };//包含各种状态	，以及角色的名字，某状态的各信息，
 	var _v0 = {	x:0,y:0	};//每个状态下的初速度
 	/////getter
+	this.setDamage = function(damage){	 _damage = damage;};
+	this.getDamage = function(){	return _damage;};
 	this.setX = function(x){	_x = x;		};
 	this.setY = function(y){	_y = y;		};
 	this.setScale = function(scale){	_scale = scale;		};
@@ -43,6 +45,11 @@ function RoleModel(){
 		}else{
 			_v0.x = 0;_v0.y = 0;
 		}
+		if(_spriteInfo.role_stateInfo[_cur_state].damage){
+			_damage = _spriteInfo.role_stateInfo[_cur_state].damage;
+		}else{
+			_damage = 0;
+		}
 		return true;
 	};
 	//坐下角坐标X,Y
@@ -52,12 +59,12 @@ function RoleModel(){
 	this.getCenterY= function() { return _y - this.getHeight() / 2;};
 	//是否使图片以镜像形式显示
 	this.getMirror = function(){	 return _mirror;	};
-	this.getScale = function(){	return  _scale;	};
-	this.getEachFrames = function(){	return _spriteInfo.role_stateInfo[_cur_state].each_frames ;	};	
+	this.getScale = function(){	return  _scale;		};
+	this.getEachFrames = function(){	return _spriteInfo.role_stateInfo[_cur_state].each_frames ;		};	
 	this.getWidth = function(){	return _spriteInfo.role_stateInfo[_cur_state].width;	 	};
 	this.getHeight = function(){		return _spriteInfo.role_stateInfo[_cur_state].height;	};
-	this.getRoleName = function(){		return _spriteInfo.role_name;	};
-	this.getRoleState = function(){		return _spriteInfo.role_stateInfo[_cur_state].desc;	};
+	this.getRoleName = function(){		return _spriteInfo.role_name;		};
+	this.getRoleState = function(){		return _spriteInfo.role_stateInfo[_cur_state].desc;		};
 	this.getNextState = function(){		return this.getKeysStateMap()[_cur_state].nextstate;	};
 	this.getSeqLength = function(){		return _spriteInfo.role_stateInfo[_cur_state].seq_length;	};
 	this.getAnimSeq = function(){		return _spriteInfo.role_stateInfo[_cur_state].ani_seq;};
@@ -67,18 +74,19 @@ function RoleModel(){
 	this.getVX = function(){	return _v0.x	;	};
 	this.getVY = function(){	return _v0.y	 ;	};
 	this.setVY = function(vy){	_v0.y	 = vy ;	};
+	this.getCurStateSkillName = function(){		return _spriteInfo.role_stateInfo[_cur_state].release_skill;	};
+	this.getReleaseSkill = function(){	return _spriteInfo.skills_info[this.getCurStateSkillName()] ;	};
+	this.getDamage = function(){	return this.getReleaseSkill().damage;		};
+	this.getSkillSprite = function(){	return this.getReleaseSkill() === undefined ?undefined:this.getReleaseSkill().sprite;		};
 	//动画序列是否播放完成，在这个状态下
 	this.isAnimSeqOver = function(){	 return this.getLoop() === undefined || _loop >= this.getLoop();	};
 	//动画序列是否正在播放中
 	this.isAnimating = function(){	 return (cnt !== 0 || _curFrame !== 0 ) && _cur_state !== "wait";	};
 	//移动
 	this.move = function(){
-		if(_cur_state === "jump_back")
-		{
-			console.log(this.getVX());
-		}
 		_x += (this.getVX()	/ (FPS_RATE >0 ? FPS_RATE : 1));
-		_y += (_v0.y -= (0.5*Utils.G / 17));		
+		_y += (_v0.y -= (0.5*Utils.G / 17));
+		
 	};	
 
 	this.draw = function(ctx){
@@ -87,6 +95,11 @@ function RoleModel(){
 		}
 		ctx.drawImage(_img,this.getCurAnimFrame()*this.getWidth(),0,this.getWidth(),this.getHeight(),_x,_y-(_scale*this.getHeight()),
 			_scale*this.getWidth(),(_scale*this.getHeight()));
+	
+		//var x1 = Utils.Tween.easeLinear(_curFrame,_x,this.getVX(),this.getSeqLength()),
+	//		y1 = Utils.Tween.easeLinear(_curFrame,_y,this.getVX(),this.getSeqLength());
+	//	ctx.drawImage(_img,this.getCurAnimFrame()*this.getWidth(),0,this.getWidth(),this.getHeight(),x1,y1-(_scale*this.getHeight()),
+	//		_scale*this.getWidth(),(_scale*this.getHeight()));
 		return true; 
 	};
 	var cnt=0;
@@ -102,6 +115,10 @@ function RoleModel(){
 			cnt=0;
 			_loop++;
 		}
+
+	//	if("wait" !== _cur_state){
+		//	console.log(this.getRoleState()+" "+this.getCurAnimFrame()+" "+_curFrame);
+	//	}
 	};
 }
 //需要一个工厂类来创建各类角色

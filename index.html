@@ -17,14 +17,13 @@
 <![endif]-->
 <link rel="stylesheet" href="asset/style.css">
 <script type="text/javascript" src="framework/library/jquery-min-1.8.2.js"></script>
-<script type="text/javascript" src="framework/utils/utils.js"></script>
 <script type="text/javascript" src="framework/core/core.js"></script>
 <script type="text/javascript" src="framework/config/config.js"></script>
+<script type="text/javascript" src="framework/utils/utils.js"></script>
 <script type="text/javascript" src="framework/models/RoleModel.js"></script>
 <script type="text/javascript" src="framework/models/AssetModel.js"></script>
 <script type="text/javascript" src="framework/models/InputModel.js"></script>
 <script type="text/javascript" src="framework/models/GameModel.js"></script>
-<script type="text/javascript" src="framework/views/GameView.js"></script>
 <script type="text/javascript" src="framework/controllers/RoleCtrl.js"></script>
 <script type="text/javascript" src="framework/controllers/GameCtrl.js"></script>
 
@@ -32,11 +31,12 @@
 
 <script type="text/javascript" >
 	$(function(){
-		(MFG).IndexAction();
+		MFG.IndexAction();
 	});
 </script>
 </head>
 <body >
+
 <div id="content">
 <div id="information-panel" >
 <span id="closeLight" class="click-text">关灯</span>
@@ -73,5 +73,7 @@
 <input id="start" type="button" class="onstart" value="Start"  />
 <div id="mask" style="background:#000;position:absolute;left:0;top:0;width:100%;z-index:50;
 opacity:0.95;visibility:hidden;display:block;"></div>
+
+
 </body>
 </html>

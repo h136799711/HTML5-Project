@@ -4,13 +4,37 @@
  * @description 
  */
 function GameCtrl(){
-	this.model = new GameModel();
-	this.view = new GameView();
+	var _model = new GameModel();
 	var that = this;
     this.update = function() {
-		that.model.update();
+		_model.update();
+		
+		if(InputModel.isKeyDown(KEYS.p))
+		{
+			_model.setPausing();
+		}
+		if(InputModel.isKeyDown(KEYS.n))
+		{
+			_model.setResume();
+		}
+		if(InputModel.isKeyDown(KEYS.r))
+		{
+			_model.setRestart();
+		}
+
+
+
+
+
 		FRAMES_PASSED ++;
 		requestAnimFrame(that.update);
     };
+	
+	this.setPausing = function(){
+		_model.setPausing();
+	};
+	this.setResume = function(){	
+		_model.setResume();
+	};
 }
 GameCtrl.prototype = new BaseCtrl();

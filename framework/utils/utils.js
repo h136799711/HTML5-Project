@@ -122,6 +122,9 @@ if(!Date.now){
 //时间单位，我准备使用帧做时间单位
 var Utils = {		G : -10 	};
 Utils.Tween = (function(){
+	var easeLinear = function(t,b,c,d){
+		return c * (t/=d) + b;
+	};
     var easeInQuad = function(t,b,c,d){
         return c * (t /= d) * t + b;
     };
@@ -143,6 +146,7 @@ Utils.Tween = (function(){
 		return easeInQuad(0.5 * t > d ? d - t: t,b,c,d);
 	};
     return {
+		easeLinear:easeLinear,
 		halfEaseInQuad:halfEaseInQuad,
         easeInQuad:easeInQuad,
         easeOutQuad:easeOutQuad,//2次方
@@ -157,8 +161,12 @@ Utils.equation = (function(){
 		//return 0;
 		return v0*t+ 0.5 * (Utils.G / 17) *(dir_of_g === undefined ? 1 : dir_of_g) * t * t; 
 	};
+	var dist2 = function(x1,y1,x2,y2){
+		return (((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)));
+	};
 	return {
-		displacement : displacement
+		displacement : displacement,
+		dist2:dist2
 	};
 })();
 Utils.FPS = (function(){

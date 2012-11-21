@@ -62,14 +62,23 @@ var AssetModel = {
 		}
 		//载入技能
 		tmp = AssetModel.res.skills;
-		for(j=0,length = tmp.length ;j<length;j++)
+		for(skill_name in tmp)
 		{
+			if(tmp[skill_name].skill_img === null){
 				img = new Image();
 				AssetModel.bindImageEventHandler(img);
-				img.src = getResUrl(resConfig.imgsUrl_relative + tmp[j].skill_url);	
-				tmp[j].skill_img = img;
-		
+				img.src = getResUrl(resConfig.imgsUrl_relative +tmp[skill_name].skill_url);	
+				tmp[skill_name].skill_img = img;
+			}
 		}
+	//	for(j=0,length = tmp.length ;j<length;j++)
+	//	{
+	//			img = new Image();
+		//		AssetModel.bindImageEventHandler(img);
+		//		img.src = getResUrl(resConfig.imgsUrl_relative + tmp[j].skill_url);	
+		//		tmp[tmp[j].skill_name].skill_img = img;
+		
+	//	}
 	//	AssetModel.LoadMusic(tmp);
     },
     isOnline: function() {
@@ -127,8 +136,7 @@ var AssetModel = {
 		this.totalLoad += tmp.length;
 		for( j=0;j<tmp.length;j++)
 		{
-			console.log(tmp[j]);
-			this.res.skills.push({skill_name:tmp[j].name,skill_url:tmp[j].url,skill_img:null});
+			this.res.skills[tmp[j].name] = {skill_url:tmp[j].url,skill_img:null};
 		}
 		console.log("资源解析后的结果: ");
 		console.log(this.res);
@@ -149,7 +157,7 @@ var AssetGetter = (function(AssetModel){
 	};
 	/*根据关数，技能名字获得技能图片*/
 	var getSkill = function(skill_name){
-			//this.res[level]["skills"]
+			return AssetModel.res.skills[skill_name].skill_img;
 	};
 	var createRoleModels = function(){
 		//for(roleConfig

@@ -6,37 +6,40 @@
 */
 function IRoleCtrl(){
 	var _model ;
-	this.isAnimating = function(){ return 	_model.isAnimating();	};
-
+	this.getReleaseSkill = function(){	return _model.getReleaseSkill();	 	};
+	this.getDamage = function(){	return _model.getDamage();		};
+	this.getSkillSprite = function(){	return _model.getSkillSprite();		};
+	this.isAnimating = function(){ return 	_model.isAnimating();		};
+	
 	this. setRight =function (){	_model.setMirror(true);	};
-	this. setLeft		=	function ()  {		_model.setMirror(false);	};
+	this. setLeft		=	function ()  {		_model.setMirror(false);		};
 	this.setScale = function(scale){		_model.setScale(scale);	};
-	this. setModel =function (model){		_model = model;	};
-	this. getModel = function(){		return _model;	};
-	this. setVY = function(vy){	_model.setVY(vy);	};
-	this. setX = function(x){		_model.setX(x);	};
-	this. setY = function(y){	_model.setY(y);	};
+	this.setModel =function (model){		_model = model;			};
+	this.getModel = function(){		return _model;		};
+	this.setVY = function(vy){	_model.setVY(vy);	};
+	this.setX = function(x){		_model.setX(x);		};
+	this.setY = function(y){	_model.setY(y);			};
 	this.getX = function(){ return _model.getX();		};
 	this.getY = function(){ return _model.getY();		};
 	this.getWidth = function(){ return _model.getWidth();		};
 	this.getHeight = function(){ return _model.getHeight();		};
-	this. update = function()	{	_model.update();	};
-	this.getLoop = function(){		return _model.getLoop();	};
+	this.update = function()	{	_model.update();						};
+	this.getLoop = function(){		return _model.getLoop();		};
 	this.setRoleState = function(state){	return _model.setRoleState(state);	};
-	this.getRoleState = function(state){	return _model.getRoleState();	};
-	this.getNextState = function(){		return _model.getNextState();	 	};
+	this.getRoleState = function(state){	return _model.getRoleState();			};
+	this.getNextState = function(){			return _model.getNextState();	 		};
 	this.isAnimSeqOver = function(){		return _model.isAnimSeqOver();	 	};
 	this.draw = function(ctx){		
-		if(_model.getMirror()){
+		
 			ctx.save();
-			ctx.translate(_model.getCenterX(),_model.getCenterY());
-			ctx.scale(-1,1);
-			ctx.translate(-_model.getCenterX(),-_model.getCenterY());
+			if(_model.getMirror()){
+				ctx.translate(_model.getCenterX(),_model.getCenterY());
+				ctx.scale(-1,1);
+				ctx.translate(-_model.getCenterX(),-_model.getCenterY());	
+			
+			}
 			_model.draw(ctx);
 			ctx.restore();
-		}else{			
-			_model.draw(ctx);
-		}
 	};
 };
 // -- KeyBoardCtrl ================================
@@ -154,18 +157,65 @@ function KeyBoardCtrl(){
 		}
 		_keys.down.setPress(InputModel.getKeyPress2(_keys.down.getKey()));
 		
+		//轻拳
+		if(InputModel.isKeyDown(_keys.lightBoxing.getKey())){
+			_keys.lightBoxing.setDown(true);
+		}else if(InputModel.isKeyUp(_keys.lightBoxing.getKey())){
+			_keys.lightBoxing.setDown(false);
+		}
+		_keys.lightBoxing.setPress(InputModel.getKeyPress2(_keys.lightBoxing.getKey()));
+		//轻脚
+		if(InputModel.isKeyDown(_keys.lightKick.getKey())){
+			_keys.lightKick.setDown(true);
+		}else if(InputModel.isKeyUp(_keys.lightKick.getKey())){
+			_keys.lightKick.setDown(false);
+		}
+		_keys.lightKick.setPress(InputModel.getKeyPress2(_keys.lightKick.getKey()));
+		//重拳
+		if(InputModel.isKeyDown(_keys.heavyBoxing.getKey())){
+			_keys.heavyBoxing.setDown(true);
+		}else if(InputModel.isKeyUp(_keys.heavyBoxing.getKey())){
+			_keys.heavyBoxing.setDown(false);
+		}
+		_keys.heavyBoxing.setPress(InputModel.getKeyPress2(_keys.heavyBoxing.getKey()));
+		//重脚
+		if(InputModel.isKeyDown(_keys.heavyKick.getKey())){
+			_keys.heavyKick.setDown(true);
+		}else if(InputModel.isKeyUp(_keys.heavyKick.getKey())){
+			_keys.heavyKick.setDown(false);
+		}
+		_keys.heavyKick.setPress(InputModel.getKeyPress2(_keys.heavyKick.getKey()));
+		
+		
 
-
-		var state = this.getStateActived();
+		var state = this.getStateActived(),sprite;
 		if(this.isAnimating()){
 			
 		}else if(this.isAnimSeqOver())
-		{
-				this.setRoleState((state = this.getNextState()));
-		}else if(typeof state !== "undefined" && this.getRoleState() !== state ){
+		{ 
+			
+			if((sprite = this.getSkillSprite()))
+			{
+				this.getModel().setDamage(0);
+				sprite.mirror = this.getModel().getMirror();
+				sprite.x = this.getModel().getX()+this.getModel().getWidth();
+				sprite.y = this.getModel().getCenterY();
+				MFGEvent.fireEvent(mfgEvents.releaseSkill,sprite);
+				
+			}
+			if(!state || state === "wait"){
+				state = this.getNextState();
+			}			
+			if(this.getRoleState() === "jumpUp" && state !== "jump_back" && state !== "jump_forward")
+			{				
+				state = this.getNextState();
+			}
+			
+			this.setRoleState(state);
+		}else if(state !== undefined && this.getRoleState() !== state ){
 				this.setRoleState(state);
-		}else{
-				this.setRoleState("wait");			
+		}else{	
+			//	Log("setRoleState undefined!");
 		}
 		KeyBoardCtrl.prototype.update();
 	};

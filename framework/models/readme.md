@@ -21,5 +21,4 @@
 
 ## RoleModel
 * 角色模型
-* { id:数值,nickname:名称,state:状态,animate:动画，根据状态决定挑选图片，update:更新}
 

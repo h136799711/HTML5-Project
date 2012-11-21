@@ -25,6 +25,16 @@ function IndexModel() {
     this.onstart = function(eve) {
 		MFGEvent.fireEvent(mfgEvents.assetLoad);//开始载入资源
     };
+    this.onBlur = function(eve) {
+		if(MFG.gameCtrl){
+			MFG.gameCtrl.setPausing();
+		}
+	};
+    this.onFocus = function(eve) {
+		if(MFG.gameCtrl){
+			MFG.gameCtrl.setRunning();
+		}
+	};
 	this.unbindEventHandler = function(){
         $(PREFIX_ID + clsid_parms.id_start).unbind("click", this.onstart);
 	};
