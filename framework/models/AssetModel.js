@@ -74,13 +74,10 @@ var AssetModel = {
 		for(url in tmp){
 			if(!tmp[url].snd){
 				img = new Audio();
-				img.preload = "none";
-				console.log(img);
 				img.addEventListener("canplay",AssetModel.imgOnLoad);
 				img.src = getResUrl(resConfig.sndsUrl_relative + tmp[url].url);	
 				img.autoplay = true;
-				img.loop = true;
-				
+				img.loop = true;				
 				tmp[url].snd = img;
 
 			}
@@ -147,7 +144,7 @@ var AssetModel = {
 		tmp = data[0].sounds;
 		Log("音效资源数目:"+tmp.length);	
 		this.res.sounds = [];
-		this.totalLoad += tmp.length;
+	//	this.totalLoad += tmp.length;
 		for( j=0;j<tmp.length;j++)
 		{
 			this.res.sounds[tmp[j].desc] = {url : tmp[j].url,	snd : null	};
