@@ -12,11 +12,12 @@ function IRoleCtrl(){
 	this.isAnimating = function(){ return 	_model.isAnimating();		};
 	
 	this. setRight =function (){	_model.setMirror(true);	};
-	this. setLeft		=	function ()  {		_model.setMirror(false);		};
+	this.setLeft		=	function ()  {		_model.setMirror(false);		};
 	this.setScale = function(scale){		_model.setScale(scale);	};
 	this.setModel =function (model){		_model = model;			};
 	this.getModel = function(){		return _model;		};
 	this.setVY = function(vy){	_model.setVY(vy);	};
+	this.setVX = function(vx){	_model.setVX(vx);	};
 	this.setX = function(x){		_model.setX(x);		};
 	this.setY = function(y){	_model.setY(y);			};
 	this.getX = function(){ return _model.getX();		};
@@ -26,7 +27,7 @@ function IRoleCtrl(){
 	this.update = function()	{	_model.update();						};
 	this.getLoop = function(){		return _model.getLoop();		};
 	this.setRoleState = function(state){	return _model.setRoleState(state);	};
-	this.getRoleState = function(state){	return _model.getRoleState();			};
+	this.getRoleState = function(){	return _model.getRoleState();			};
 	this.getNextState = function(){			return _model.getNextState();	 		};
 	this.isAnimSeqOver = function(){		return _model.isAnimSeqOver();	 	};
 	this.draw = function(ctx){		
@@ -194,15 +195,15 @@ function KeyBoardCtrl(){
 		}else if(this.isAnimSeqOver())
 		{ 
 			
-			if((sprite = this.getSkillSprite()))
-			{
-				this.getModel().setDamage(0);
-				sprite.mirror = this.getModel().getMirror();
-				sprite.x = this.getModel().getX()+this.getModel().getWidth();
-				sprite.y = this.getModel().getCenterY();
-				MFGEvent.fireEvent(mfgEvents.releaseSkill,sprite);
+			//if((sprite = this.getSkillSprite()))
+		//	{
+			//	this.getModel().setDamage(0);
+		//		sprite.mirror = this.getModel().getMirror();
+		//		sprite.x = this.getModel().getX()+this.getModel().getWidth();
+		//		sprite.y = this.getModel().getCenterY();
+		//		MFGEvent.fireEvent(mfgEvents.releaseSkill,sprite);
 				
-			}
+	//		}
 			if(!state || state === "wait"){
 				state = this.getNextState();
 			}			

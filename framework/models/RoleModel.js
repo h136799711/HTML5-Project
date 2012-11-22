@@ -38,6 +38,7 @@ function RoleModel(){
 		}
 		_cur_state =  state;
 		_loop = 0;
+		_curFrame = 0 ;
 		this.setImg(AssetGetter.getRole(this.getRoleName(),this.getRoleState()));
 		if(_spriteInfo.role_stateInfo[_cur_state].v0 !== undefined){
 			_v0.x =  Number(_spriteInfo.role_stateInfo[_cur_state].v0.x);
@@ -74,9 +75,15 @@ function RoleModel(){
 	this.getVX = function(){	return _v0.x	;	};
 	this.getVY = function(){	return _v0.y	 ;	};
 	this.setVY = function(vy){	_v0.y	 = vy ;	};
-	this.getCurStateSkillName = function(){		return _spriteInfo.role_stateInfo[_cur_state].release_skill;	};
+	this.setVX = function(vx){	_v0.x	 = vx ;	};
+	this.getReleaseFrame = function(){
+		if(_spriteInfo.role_stateInfo[_cur_state].release_skill){
+			return _spriteInfo.role_stateInfo[_cur_state].release_skill.frame;	
+		}
+	};
+
+	this.getCurStateSkillName = function(){		return _spriteInfo.role_stateInfo[_cur_state].release_skill.name;	};
 	this.getReleaseSkill = function(){	return _spriteInfo.skills_info[this.getCurStateSkillName()] ;	};
-	this.getDamage = function(){	return this.getReleaseSkill().damage;		};
 	this.getSkillSprite = function(){	return this.getReleaseSkill() === undefined ?undefined:this.getReleaseSkill().sprite;		};
 	//动画序列是否播放完成，在这个状态下
 	this.isAnimSeqOver = function(){	 return this.getLoop() === undefined || _loop >= this.getLoop();	};
@@ -84,16 +91,21 @@ function RoleModel(){
 	this.isAnimating = function(){	 return (cnt !== 0 || _curFrame !== 0 ) && _cur_state !== "wait";	};
 	//移动
 	this.move = function(){
-		_x += (this.getVX()	/ (FPS_RATE >0 ? FPS_RATE : 1));
-		_y += (_v0.y -= (0.5*Utils.G / 17));
+		var offsetX = (this.getVX()	/ (FPS_RATE >0 ? FPS_RATE : 1));
+		_x += offsetX;
 		
+		_y += (_v0.y -= (0.5*Utils.G / 17));		
 	};	
 
 	this.draw = function(ctx){
 		if(typeof _img === "undefined" || _img === null){
 			return false;
 		}
-		ctx.drawImage(_img,this.getCurAnimFrame()*this.getWidth(),0,this.getWidth(),this.getHeight(),_x,_y-(_scale*this.getHeight()),
+		var offset = this.getCurAnimFrame();
+		if(this.isAnimSeqOver()){
+			offset = this.getAnimSeq()[this.getSeqLength()-1];
+		}
+		ctx.drawImage(_img,offset*this.getWidth(),0,this.getWidth(),this.getHeight(),_x,_y-(_scale*this.getHeight()),
 			_scale*this.getWidth(),(_scale*this.getHeight()));
 	
 		//var x1 = Utils.Tween.easeLinear(_curFrame,_x,this.getVX(),this.getSeqLength()),
@@ -108,10 +120,20 @@ function RoleModel(){
 		if(cnt > this.getEachFrames() * (FPS_RATE>0?FPS_RATE:1)){
 			_curFrame++;
 			cnt=0;
+			if(_curFrame === this.getReleaseFrame())
+			{
+					console.log(this.getRoleName()+" ( "+this.getX()+","+this.getY()+" )");
+					this.setDamage(0);
+					var sprite = this.getSkillSprite();
+					sprite.mirror = this.getMirror();
+					sprite.x = this.getX()+this.getWidth()+5;
+					sprite.y = this.getCenterY()-sprite.height/2;
+					MFGEvent.fireEvent(mfgEvents.releaseSkill,sprite);
+			}
 		}
 		cnt++;
 		if(_curFrame  >= this.getSeqLength()){
-			_curFrame = 0 ;
+			_curFrame = 0;
 			cnt=0;
 			_loop++;
 		}

@@ -113,6 +113,10 @@ if (!Object.create) {
         return new F();
     };
 }
+if(!document.addEventListener){
+	document.addEventListener = document.attachEvent;
+	document.removeEventListener = document.detachEvent;
+}
 if(!Date.now){
 		Date.now = function(){	return new Date().getTime();};	
 }

@@ -25,13 +25,17 @@ function GameModel() {
 	this.worldRect = {leftUp : {x:0,y:0} ,rightDown:{x:0,y:0}};
 	this.groundY = 25;//地面，相对 下Y 值的上偏移值
 	this.csDet_RoleCtrl = function(role_ctrl1,role_ctrl2){
-	
-	if(role_ctrl1.getY() > this.worldRect.rightDown.y){	role_ctrl1.setY(this.worldRect.rightDown.y);}
-	else if(role_ctrl1.getY() - role_ctrl1.getHeight() < this.worldRect.leftUp.y){	role_ctrl1.setY(this.worldRect.rightDown.y);	
+	if(role_ctrl1.getX() < this.worldRect.leftUp.x)		{	
+		role_ctrl1.setX(this.worldRect.leftUp.x);		
 	}
-	if(role_ctrl1.getX() < this.worldRect.leftUp.x)		{	role_ctrl1.setX(this.worldRect.leftUp.x);		}
-	else if(role_ctrl1.getX() + role_ctrl1.getWidth()> this.worldRect.rightDown.x) {	role_ctrl1.setX(this.worldRect.rightDown.x - role_ctrl1.getWidth());	}
-
+	else if(role_ctrl1.getX() + role_ctrl1.getWidth()> this.worldRect.rightDown.x) {	role_ctrl1.setX(this.worldRect.rightDown.x - role_ctrl1.getWidth());	
+	}
+	if(role_ctrl1.getY() > this.worldRect.rightDown.y){
+		role_ctrl1.setY(this.worldRect.rightDown.y);
+		return  -1;//落地
+	}
+	else if(role_ctrl1.getY() - role_ctrl1.getHeight() < this.worldRect.leftUp.y){	role_ctrl1.setY(this.worldRect.rightDown.y);
+	}
 	};
 	this.collisionTest = function(lx1,ly1,w1,h1,lx2,ly2,w2,h2)
 	{
@@ -45,9 +49,9 @@ function GameModel() {
 		AnimationList.every(function(arr)
 		{
 			var i,j;
-			for(i=arr.length-1;i>=0;i--)
+			for(i=0;i<arr.length;i++)
 			{
-				for(j=arr.length-1;j>=0;j--)
+				for(j=0;j<arr.length;j++)
 				{
 					if(i !== j && arr[i] && arr[j])
 					{
@@ -56,12 +60,14 @@ function GameModel() {
 						{
 							arr[i] = null;
 							arr[j] = null;
-							arr.splice(i,1);
-							arr.splice(j,1);
+							var tmp = i < j ? i : j;
+							arr.splice(tmp,1);
+							tmp = i > j ? i : j;
+							arr.splice(tmp - 1,1);
 						}
 					}
 				}
-				if(arr[i].getX() <  that.worldRect.leftUp.x || arr[i].getX() > that.worldRect.rightDown.x)
+				if(i < arr.length && (arr[i].getX() <  that.worldRect.leftUp.x || arr[i].getX() > that.worldRect.rightDown.x))
 				{
 							arr[i] = null;
 							arr.splice(i,1);						
@@ -71,8 +77,41 @@ function GameModel() {
 	};
 	//碰撞检测
 	this.collisionDetection = function(){
-		this.csDet_RoleCtrl(left_role);
-		this.csDet_RoleCtrl(right_role);
+
+		if(this.collisionTest(left_role.getX(),left_role.getY(),left_role.getWidth(),left_role.getHeight(),right_role.getX(),right_role.getY(),right_role.getWidth(),right_role.getHeight())){
+			if(!left_role.getModel().getMirror()){
+				var lr,rr;
+				if(left_role.getX() > right_role.getX())
+				{
+					lr = right_role;rr = left_role;
+				}else{
+					lr = left_role;rr = right_role;
+				}
+				if(lr.isAnimating()){
+					lr.setX(rr.getX()- lr.getWidth());
+				}else{					
+					rr.setX(lr.getX()+ lr.getWidth());
+				}
+			}
+			console.log("角色碰撞");
+			
+		}
+
+
+
+		var rst = 0;
+		rst = this.csDet_RoleCtrl(left_role);
+		rst = this.csDet_RoleCtrl(right_role);
+		if(rst === -1){
+			if(left_role.getX() > right_role.getX())
+			{
+				left_role.setRight();
+				right_role.setLeft();
+			}else{
+				left_role.setLeft();
+				right_role.setRight();			
+			}
+		}
 		this.csDet_Anim();
 	};
 	
@@ -169,11 +208,12 @@ function GameModel() {
 		AnimationList.draw(that.ctx);
 		left_role.update();
 		right_role.update();
-		right_role.setRoleState(left_role.getRoleState()!=="jumpUp"?left_role.getRoleState():"wait");
+		if(right_role.isAnimSeqOver()){
+			right_role.setRoleState(left_role.getRoleState()!=="jumpUp"?left_role.getRoleState():"wait");
+		}
 		AnimationList.update();
 
 		this.collisionDetection();
-		
 	};
 
 	//初始化角色
@@ -301,8 +341,8 @@ function SkillModel(){
 		_loop=0,_image=null,_spriteInfo;
 	this.setX = function(x)	 { _x = x;	};
 	this.setY = function(y)	 { _y = y;	};
-	this.getX = function(x)	 { return _x;	};
-	this.getY = function(y)	 { return _y;	};
+	this.getX = function()	 { return _x;	};
+	this.getY = function()	 { return _y;	};
 	this.getV = function(){		return _v0;		};
 	this.setV = function(v){	_v0.x = v.x;	_v0.y = v.y;		};
 	this.getWidth = function(){	 	return _spriteInfo.width;		};

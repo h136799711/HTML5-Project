@@ -6,18 +6,11 @@ var PREFIX_CLS = ".";
 var PREFIX_ID = "#";
 var FPS_RATE = 1;
 var mfgConfig ={
-		bLoadFromLocal:true,//无用使用相对路径了
         isDebug: true,
         screenWidth: 640,
-        screenHeight: 480,
-        remoteBaseUrl: "http://www.hebidu.cn/html5/",
-        localBaseUrl: "http://127.0.0.1:8080/HTML5-Project/",
-		
-        logLevel: 5,//记录开发用
+        screenHeight: 480,		
         alertLevel: 4,//警告，使用alert方法显示文字
         toUserLevel: 3,//给予用户看
-        deadLevel: 1,//直接退出，会记录以console.log方式
-        version: "1.1.0"
   };
 var clsid_parms = (function(){
 
@@ -44,9 +37,9 @@ var clsid_parms = (function(){
 //资源的相对路径和资源描述符对象的文件名
 var resConfig = (function(){
   return {
-	  resUrl_relative:"asset/",    //所有资源的目录
-    rs1: "rs1.js",//资源描述
-    imgsUrl_relative:"images/"//所有图片资源的目录
+		resUrl_relative:"asset/",    //所有资源的目录
+		imgsUrl_relative:"images/",//所有图片资源的目录
+		sndsUrl_relative:"sound/"//所有图片资源的目录
   }
 })();
 var mfgEvents = (function(){//程序中自定义的事件
@@ -88,8 +81,6 @@ function Log(info,level) {
     }
 }
  //按键 a-z ,小键盘0-9 ，空格键，上下左右4个方向键
-var KEYS_CHAR = [];
-KEYS_CHAR[39] = "right";
 var KEYS = (function(){
  return {
 	 a:65,b:66,c:67,d:68,e:69,f:70,g:71,h:72,i:73,
@@ -216,11 +207,11 @@ var roleConfig = [{
     desc:"wave_boxing",
     width:108,
     height:90,
-    ani_seq:[0,1,2,3,3,3],
-    each_frames:8,
+    ani_seq:[0,1,2,3,3,3,3],
+    each_frames:6,
     seq_length:6,
 	loop:1 ,
-	release_skill:"wave_boxing"
+	release_skill:{frame:4,name:"wave_boxing"}
 	},
     wait:{
     desc:"wait",
@@ -275,7 +266,7 @@ var roleConfig = [{
 			desc:"jumpUp",
 			width:57,
 			height:109,
-			ani_seq:[5,5,6,6,6,6,6],
+			ani_seq:[5,6,6,6,6,6,6],
 			each_frames:7,
 			seq_length:7,
 			loop:1 ,
@@ -445,7 +436,6 @@ var roleConfig = [{
     desc:"wait",
     width:62,
     height:92,
-//    ani_seq:[0,5,3,4,4,2],
     ani_seq:[0,1,2,3,4,5],
     each_frames:10 ,//每each_frames帧递增,
     seq_length:6,//序列总长度,便于获取，不用每次ani_seq.length
@@ -573,9 +563,8 @@ var MFG_RES_DESC= [
 		
 		"RYU2/RYU2_wait.gif",
 			//右走，左走，上跳，下蹲，
-		"RYU2/RYU2_goForward.gif","RYU2/RYU2_goBack.gif","RYU2/RYU2_jumpUp.gif","RYU2/RYU2_crouch.gif","RYU2/RYU2_jump_back.gif","RYU2/RYU2_jump_forward.gif","RYU2/RYU2_wave_boxing.gif","RYU2/RYU2_light_boxing.gif","RYU2/RYU2_light_kick.gif","RYU2/RYU2_heavy_kick.gif",],//角色图片
-
-
+		"RYU2/RYU2_goForward.gif","RYU2/RYU2_goBack.gif","RYU2/RYU2_jumpUp.gif","RYU2/RYU2_crouch.gif","RYU2/RYU2_jump_back.gif","RYU2/RYU2_jump_forward.gif","RYU2/RYU2_wave_boxing.gif","RYU2/RYU2_light_boxing.gif","RYU2/RYU2_light_kick.gif","RYU2/RYU2_heavy_kick.gif"],
+		//角色图片
         skills:[
             {
                  name:"s001",
@@ -585,11 +574,11 @@ var MFG_RES_DESC= [
 				name:"s002",
 				url:"magic/transverseWaveDisappear.gif"
 			}
-            ]
-         }
-           ];
-//window = window;
-//document = window.document;
-//navigator = window.navigator;
+            ],
+			sounds:[{
+				desc:"bgm",
+				url:"china.mp3"}]
+         } 
+];
 
 //​​​​

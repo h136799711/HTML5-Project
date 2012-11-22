@@ -16,8 +16,7 @@
 	]
 	
  */
-var AssetModel = {	
-
+var AssetModel = {
 	getLoop : 0,
 	//资源
 	res:{},
@@ -26,7 +25,7 @@ var AssetModel = {
     //获得资源描述字符串
     getResDesc : function(resWhich) {
 		if(this.isReadyToLoad) {
-			return ;//已经准备好了直接返回，
+			return ;//已经准备好了直接返回
 		}
 		if(typeof MFG_RES_DESC !== "undifined"){			
 			this.parseResDesc(MFG_RES_DESC);
@@ -71,15 +70,22 @@ var AssetModel = {
 				tmp[skill_name].skill_img = img;
 			}
 		}
-	//	for(j=0,length = tmp.length ;j<length;j++)
-	//	{
-	//			img = new Image();
-		//		AssetModel.bindImageEventHandler(img);
-		//		img.src = getResUrl(resConfig.imgsUrl_relative + tmp[j].skill_url);	
-		//		tmp[tmp[j].skill_name].skill_img = img;
-		
-	//	}
-	//	AssetModel.LoadMusic(tmp);
+		tmp = AssetModel.res.sounds;
+		for(url in tmp){
+			if(!tmp[url].snd){
+				img = new Audio();
+				img.preload = "none";
+				console.log(img);
+				img.addEventListener("canplay",AssetModel.imgOnLoad);
+				img.src = getResUrl(resConfig.sndsUrl_relative + tmp[url].url);	
+				img.autoplay = true;
+				img.loop = true;
+				
+				tmp[url].snd = img;
+
+			}
+		}
+
     },
     isOnline: function() {
         return navigator.onLine;
@@ -138,6 +144,15 @@ var AssetModel = {
 		{
 			this.res.skills[tmp[j].name] = {skill_url:tmp[j].url,skill_img:null};
 		}
+		tmp = data[0].sounds;
+		Log("音效资源数目:"+tmp.length);	
+		this.res.sounds = [];
+		this.totalLoad += tmp.length;
+		for( j=0;j<tmp.length;j++)
+		{
+			this.res.sounds[tmp[j].desc] = {url : tmp[j].url,	snd : null	};
+		}
+
 		console.log("资源解析后的结果: ");
 		console.log(this.res);
 		MFGEvent.fireEvent(mfgEvents.resDescReady);//触发ready事件	
